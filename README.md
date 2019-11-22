@@ -76,7 +76,7 @@
 
 ## 数据库信息查询
 
-| **SELECT* FROM V$VERSION;**                                  | **查看数据库版本信息** |
+| **SELECT `*` FROM V$VERSION;**                                  | **查看数据库版本信息** |
 | ------------------------------------------------------------ | ---------------------- |
 | **SELECT PLAN_TABLE_OUTPUT FROM TABLE(DBMS_XPLAN.DISPLAY());** | **显示执行计划**       |
 | **EXPLAIN PLAN FOR  ······**                                 | **需要执行计划的语句** |
