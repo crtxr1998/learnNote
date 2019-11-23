@@ -1,4 +1,4 @@
-# DDL创建表和创建约束的Sql语法(Oracle与Mysql大同小异)
+# DDL创建表和创建约束的Sql语法(Oracle与Mysql大同小异)uuuuuu
 
 1、创建表的语句
 
