@@ -47,6 +47,10 @@
 
 create index 索引名 on 表名(列名);
 
+定期的重构索引: 
+
+ALTER INDEX <INDEXNAME> REBUILD <TABLESPACENAME> 
+
 2、删除索引
 
 drop index 索引名;
