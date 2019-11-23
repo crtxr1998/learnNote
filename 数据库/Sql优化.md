@@ -42,7 +42,35 @@
   alter table Student add constraint FK_Student_StuCLass_ClassId 
   foreign key(ClassId) references StuClass(ClassId);
 ```
+3.1、创建索引
+```
 
+create index 索引名 on 表名(列名);
+
+2、删除索引
+
+drop index 索引名;
+ 
+
+3、创建组合索引
+
+create index 索引名 on 表名(列名1,,列名2);
+
+
+
+ 
+*查看目标表中已添加的索引
+*
+*/
+--在数据库中查找表名
+select * from user_tables where  table_name like 'tablename%';
+ 
+--查看该表的所有索引
+select * from all_indexes where table_name = 'tablename';
+ 
+--查看该表的所有索引列
+select* from all_ind_columns where table_name = 'tablename';
+```
 注意：创建表还是约束，与SQL Server基本相同，注意：在Oracle中default是一个值，而SQL Server中default是一个约束，
 
 因此Oracle的default设置可以在建表的时候创建或者通过Modify函数创建
