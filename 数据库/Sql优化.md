@@ -1,6 +1,6 @@
 # DDL创建表和创建约束的Sql语法(Oracle与Mysql大同小异)
 
-1、创建表的语句
+**创建表的语句**
 
 ```plsql
  ---1、创建模拟的数据表 ---
@@ -22,7 +22,7 @@
   ); 
 ```
 
-2、创建约束的语句
+**创建约束的语句**
 
 ```plsql
   ----2、创建数据表的约束---
@@ -42,39 +42,47 @@
   alter table Student add constraint FK_Student_StuCLass_ClassId 
   foreign key(ClassId) references StuClass(ClassId);
 ```
-3.1、创建索引
-```
+**创建索引操作**
 
-create index 索引名 on 表名(列名);
+```plsql
+1、创建索引
 
-定期的重构索引: 
-
-ALTER INDEX <INDEXNAME> REBUILD <TABLESPACENAME> 
+create index <INDEXNAME> on <TABLENAME>(<COLUMN1>);
 
 2、删除索引
 
-drop index 索引名;
- 
+drop index <INDEXNAME>;
 
 3、创建组合索引
 
-create index 索引名 on 表名(列名1,,列名2);
+create index <INDEXNAME> on <TABLENAME> (<COLUMN1>,<COLUMN2>);
 
+4、定期的重构索引: 
 
+ALTER INDEX <INDEXNAME> REBUILD <TABLESPACENAME> 
 
- 
-*查看目标表中已添加的索引
-*
-*/
---在数据库中查找表名
-select * from user_tables where  table_name like 'tablename%';
- 
---查看该表的所有索引
-select * from all_indexes where table_name = 'tablename';
- 
---查看该表的所有索引列
-select* from all_ind_columns where table_name = 'tablename';
+5、查看目标表中已添加的索引
+
+    --在数据库中查找表名
+    SELECT * from user_tables where  table_name like 'tablename%';
+
+    --查看该表的所有索引
+    SELECT * from all_indexes where table_name = 'tablename';
+
+    --查看该表的所有索引列
+    SELECT * from all_ind_columns where table_name = 'tablename';
+
+6、查询时强制指定索引(一定要使用别名，不然不生效)
+SELECT /*+INDEX(mmp <INDEXNAME>)*/* FROM TB_BIZ_JZGJBXX mmp
 ```
+## 数据库基本查询语句作用
+
+| **SELECT* FROM V$VERSION;**                                  | **查看数据库版本信息** |
+| ------------------------------------------------------------ | ---------------------- |
+| **SELECT PLAN_TABLE_OUTPUT FROM TABLE(DBMS_XPLAN.DISPLAY());** | **显示执行计划**       |
+| **EXPLAIN PLAN FOR  ······**                                 | **需要执行计划的语句** |
+|                                                              |                        |
+
 注意：创建表还是约束，与SQL Server基本相同，注意：在Oracle中default是一个值，而SQL Server中default是一个约束，
 
 因此Oracle的default设置可以在建表的时候创建或者通过Modify函数创建
@@ -100,21 +108,18 @@ select* from all_ind_columns where table_name = 'tablename';
 
 ## 使用工具
 
-- **Navicat**
+- **Navicat      <b style='color:red'>没有Tree结构看死人</b>**
+- **PLSQL         <b style='color:red'>建议</b>**
 
 ## Oracle优化软件
 
-- **Tosska SQL Tuning Expert**      <a style='color:red'>自动化优化工具 </a>           
+- **Tosska SQL Tuning Expert**      <b style='color:red'>自动化优化工具 </b>           
 
-## 数据库信息查询
+## 
 
-| **SELECT* FROM V$VERSION;**                                  | **查看数据库版本信息** |
-| ------------------------------------------------------------ | ---------------------- |
-| **SELECT PLAN_TABLE_OUTPUT FROM TABLE(DBMS_XPLAN.DISPLAY());** | **显示执行计划**       |
-| **EXPLAIN PLAN FOR  ······**                                 | **需要执行计划的语句** |
-|                                                              |                        |
+[关于Oracle的sql优化,Navicat的使用](https://mp.weixin.qq.com/s/YI40HEZck49nnHXouSKZOw)
 
-[Oracle常用优化一](https://mp.weixin.qq.com/s/OoBSxFI1dCI7RTgMu2jcbQ)
+Oracle常用优化一](https://mp.weixin.qq.com/s/OoBSxFI1dCI7RTgMu2jcbQ)
 
 [Oracle常用优化二](https://mp.weixin.qq.com/s/1ZsqKuqbgf9p0WaawS_vTA)
 
@@ -193,17 +198,67 @@ Join是一种试图将两个表结合在一起的谓词，一次只能连接两�
 如果row source已经在关联列上被排序，则该连结操作就不需要再进行sort操作，这样可以大大提高这种连接操作的连接速度，因为排序是个极其耗费资源的操作。预先排序的row source包括已经被索引的列或row source已经在前面的步骤中被排序了。另外，尽管合并两个row source的过程是串行的，但是可以并行访问这两个row source（如并行读入数据，排序）。
  排序是一个费时，费资源的操作，基于这个原因，SMJ通常不是一种有效率的连接方式，但当row source已经排好序的前提下，SMJ的效率还是很可观的。
 
-- **嵌套循环连接(Nested Loops(NL))**
-  这个连接方法有驱动表（外部表）的概念。该连接过程就是一个2层嵌套循环，所以外层循环的次数越少越好，这就是我们将小表作为驱动表（用于外层循环）的理论依据。但是这个理论只是一般指导原则，因为遵循这个理论并不能总保证使语句产生的I/0次数最少。
-  在NESTED LOOPS连接中，Oracle读取外部表的每一行，然后再内部表中检查是否有匹配的行，所有被匹配的行都被放到结果集中，然后处理外部表的下一行。如果外部表比较小，并且在内部表中有唯一高选择性非唯一索引时，使用这种方法可以得到较好的效率。NESTED LOOPS有其它连接方法没有的一个优点：可以先返回已经连接的行，而不必等待所有的连接操作处理完成才返回数据，这可以实现快速的响应时间。
-  如果不适用并行操作，最好的驱动表是那些应用了where条件限制后，可以返回较少行数据的表。对于并行查询，我们经常选择大表作为驱动表，因为大表可以充分利用并行功能。当然，有时对查询使用并行操作不一定比查询不使用并行操作效率高，因为最后可能每个表只有很少的行符合限制条件，而且还要看你的硬件配置是否支持并行（多个CPU，多个硬盘控制器）。
+1. **嵌套循环连接(Nested Loops(NL))**
+    这个连接方法有驱动表（外部表）的概念。该连接过程就是一个2层嵌套循环，所以外层循环的次数越少越好，这就是我们将小表作为驱动表（用于外层循环）的理论依据。但是这个理论只是一般指导原则，因为遵循这个理论并不能总保证使语句产生的I/0次数最少。
+    在NESTED LOOPS连接中，Oracle读取外部表的每一行，然后再内部表中检查是否有匹配的行，所有被匹配的行都被放到结果集中，然后处理外部表的下一行。如果外部表比较小，并且在内部表中有唯一高选择性非唯一索引时，使用这种方法可以得到较好的效率。NESTED LOOPS有其它连接方法没有的一个优点：可以先返回已经连接的行，而不必等待所有的连接操作处理完成才返回数据，这可以实现快速的响应时间。
+    如果不适用并行操作，最好的驱动表是那些应用了where条件限制后，可以返回较少行数据的表。对于并行查询，我们经常选择大表作为驱动表，因为大表可以充分利用并行功能。当然，有时对查询使用并行操作不一定比查询不使用并行操作效率高，因为最后可能每个表只有很少的行符合限制条件，而且还要看你的硬件配置是否支持并行（多个CPU，多个硬盘控制器）。
 
-- **哈希连接(Hash Join)**
-  哈希连接是在Oracle7.3以后引入的，从理论上来说比NL和SMJ更高效，而且只用在CBO优化器中。
-  较小的row source被用来构建hash table与bitmap，第二个row source用来于第一个row source生成的hash table进行匹配，以便进行进一步的连接。Bitmap被用来作为一种比较快的查找方法，来检查再hash table中是否有匹配的行。特别的，当hash table比较大而不能全部容纳在内存中时，这种查找方法更为有用。这种连接方法也有驱动表的概念，被构建为hash table与bitmap的表为驱动表，当被构建的hash table与bitmap能被容纳在内存中，这种连接方式的效率极高。
-  要是哈希连接有效，需要设置HASH_JOIN_ENABLED=TRUE,缺省情况下该参数为TRUE,另外还需要设置hash_area_size参数，以使哈希连接高效运行，因为哈希连接会在参数指定的大小的内存中运行，过小的参数会使哈希连接的性能比其他连接方式低。
+2. **哈希连接(Hash Join)**
+    哈希连接是在Oracle7.3以后引入的，从理论上来说比NL和SMJ更高效，而且只用在CBO优化器中。
+    较小的row source被用来构建hash table与bitmap，第二个row source用来于第一个row source生成的hash table进行匹配，以便进行进一步的连接。Bitmap被用来作为一种比较快的查找方法，来检查再hash table中是否有匹配的行。特别的，当hash table比较大而不能全部容纳在内存中时，这种查找方法更为有用。这种连接方法也有驱动表的概念，被构建为hash table与bitmap的表为驱动表，当被构建的hash table与bitmap能被容纳在内存中，这种连接方式的效率极高。
+    要是哈希连接有效，需要设置HASH_JOIN_ENABLED=TRUE,缺省情况下该参数为TRUE,另外还需要设置hash_area_size参数，以使哈希连接高效运行，因为哈希连接会在参数指定的大小的内存中运行，过小的参数会使哈希连接的性能比其他连接方式低。
 
-  
+3. **表访问的执行计划**
+
+  1、table access full：全表扫描。它会访问表中的每一条记录。
+
+  2、table access by user rowid：输入源rowid来自于用户指定。
+
+  3、table access by index rowid：输入源rowid来自于索引。
+
+  4、table access by global index rowid：全局索引获取rowid，然后再回表。
+
+  5、table access by local index rowid：分区索引获取rowid，然后再回表。
+
+  6、table access cluster：通过索引簇的键来访问索表。
+
+  7、external table access：访问外部表。
+
+  8、result cache：结果集可能来自于缓存。
+
+  9、mat_view rewrite access：物化视图。
+
+  索引访问的执行计划
+
+  1、index unique scan：只返回一条rowid的索引扫描，或者unique索引的等值扫描。
+
+  2、index range scan：返回多条rowid的索引扫描。
+
+  3、index full scan：顺序扫描整个索引。
+
+  4、index fast full scan：多块读方式扫描整个索引。
+
+  5、index skip scan：多应用于组合索引中，引导键值为空的情况下索引扫描。
+
+  6、and-equal：合并来自于一个或多个索引的结果集。
+
+  7、domain index：应用域索引。
+
+  表连接的执行计划
+
+   
+
+  表连接的几种方式：
+
+  1、SORT MERGE JOIN（排序-合并连接）
+
+  2、NESTED LOOPS（嵌套循环）
+
+  3、HASH JOIN（哈希连接）
+
+  4、CARTESIAN PRODUCT（笛卡尔积）
+
+4. 
 
 ### 总结
 
@@ -233,7 +288,7 @@ Join是一种试图将两个表结合在一起的谓词，一次只能连接两�
 | **Access Predicates ** | **通过某种方式定位了需要的数据，然后读取出这些结果集，叫做Access。<br/>表示这个谓词条件的值将会影响数据的访问路径（表还是索引）。** |
 | **Filter Predicates**  | **把所有的数据都访问了，然后过滤掉不需要的数据，这种方式叫做filter 。<br/>表示谓词条件的值不会影响数据的访问路径，只起过滤的作用。** |
 
-#### 2.1执行顺序的原则
+#### 2.1🔽🔽🔽执行顺序的原则
 
 执行顺序的原则是：由上至下，从右向左
 由上至下：在执行计划中一般含有多个节点，相同级别(或并列)的节点，靠上的优先执行，靠下的后执行
@@ -254,6 +309,21 @@ Join是一种试图将两个表结合在一起的谓词，一次只能连接两�
 
 
 ## 使用autotrace工具（只能SQLPLUS😐）
+
+```
+ 用法1：查看执行计划、统计信息并且返回sql结果集
+set autotrace on;  
+
+用法2：查看执行计划、统计信息不返回sql结果集：
+
+SQL> set autotrace traceonly;   
+
+---方法3：只看执行计划不返回sql结果集：
+
+QL> set autotrace traceonly explain;  
+```
+
+
 
 #### 查看执行计划、统计信息、执行时间并且返回sql结果集：
 
