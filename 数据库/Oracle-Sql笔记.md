@@ -81,13 +81,12 @@ SELECT /*+INDEX(mmp <INDEXNAME>)*/* FROM TB_BIZ_JZGJBXX mmp
 | ------------------------------------------------------------ | ---------------------- |
 | **SELECT PLAN_TABLE_OUTPUT FROM TABLE(DBMS_XPLAN.DISPLAY());** | **显示执行计划**       |
 | **EXPLAIN PLAN FOR  ······**                                 | **需要执行计划的语句** |
-|                                                              |                        |
 
 注意：创建表还是约束，与SQL Server基本相同，注意：在Oracle中default是一个值，而SQL Server中default是一个约束，
 
 因此Oracle的default设置可以在建表的时候创建或者通过Modify函数创建
 
-3、添加模拟的数据
+**添加模拟的数据**
 
 ```plsql
   --3、添加模拟的数据--
@@ -115,11 +114,11 @@ SELECT /*+INDEX(mmp <INDEXNAME>)*/* FROM TB_BIZ_JZGJBXX mmp
 
 - **Tosska SQL Tuning Expert**      <b style='color:red'>自动化优化工具 </b>           
 
-## 
+## 参考文章
 
 [关于Oracle的sql优化,Navicat的使用](https://mp.weixin.qq.com/s/YI40HEZck49nnHXouSKZOw)
 
-Oracle常用优化一](https://mp.weixin.qq.com/s/OoBSxFI1dCI7RTgMu2jcbQ)
+[Oracle常用优化一](https://mp.weixin.qq.com/s/OoBSxFI1dCI7RTgMu2jcbQ)
 
 [Oracle常用优化二](https://mp.weixin.qq.com/s/1ZsqKuqbgf9p0WaawS_vTA)
 
@@ -131,9 +130,21 @@ Oracle常用优化一](https://mp.weixin.qq.com/s/OoBSxFI1dCI7RTgMu2jcbQ)
 
 [Oracle常用优化六](https://mp.weixin.qq.com/s/8EolcaU2MljalnleV78wBg)
 
+[Oracle 数据库常用操作语句](https://mp.weixin.qq.com/s/IHscA2DL9plqMe_GsOkbGQ)
+
+[Oracle SQL高手必知的调优方法 <一>](https://mp.weixin.qq.com/s/ChnuQ6PshxtkaBT4eXlfww)
+
+[Oracle SQL 高手必知的调优方法 <二>](https://mp.weixin.qq.com/s/KKvAvjHCrrN8P09Nu9zyKQ)
+
+[Oracle SQL 高手必知的调优方法 <三>](https://mp.weixin.qq.com/s/odVSiK3VUCBa7T5OlILd6A)
+
+[Oracle SQL 高手必知的调优方法 <四>](https://mp.weixin.qq.com/s/_1K-1Kr9WnYYCj5ZURFBqg)
+
+[Oracle SQL性能优化40条](https://mp.weixin.qq.com/s/GCS2m03zAfXoQdFBhy0JXw)
+
+[关于Oracle的sql优化](https://mp.weixin.qq.com/s/YI40HEZck49nnHXouSKZOw)
 
 
-## **执行计划 **
 
 ### 相关的概念
 
@@ -154,11 +165,11 @@ Oracle常用优化一](https://mp.weixin.qq.com/s/OoBSxFI1dCI7RTgMu2jcbQ)
 
 ### Oracle访问数据的方法
 
-1. **全表扫描(FULL TABLE SCANS,FTS)**
+- **全表扫描(FULL TABLE SCANS,FTS)**
    为实现全表扫描，Oracle读取表中所有的行，并检查每一行是否满足语句的where条件。一个多块读操作可以使一次I/O能读取多块数据(db_block_multiblock_read_count参数设定)，而不是只读取一个数据块，这极大的减少了I/O的总次数，提高了系统的吞吐量，所以利用多块读的方法可以十分高效的实现全表扫描，而且只有在全表扫描的情况下才能使用多块读操作。使用FTS的前提条件：在较大的表上不建议使用全表扫描，除非取出的数据比较多，超过总量的5%-10%，或者想使用并行查询功能。
-2. **通过ROWID(TABLE ACCESS BY ROWID)**
+- **通过ROWID(TABLE ACCESS BY ROWID)**
    行的ROWID指出了该行所在的数据文件，数据块及该行在该块中的位置，所以通过ROWID来存取数据可以快速定位到目标数据上，是Oracle存取单行数据的最快方法。
-3. **索引扫描(INDEX SCAN/INDEX LOOKUP)**
+- **索引扫描(INDEX SCAN/INDEX LOOKUP)**
    通过Index先查找到数据对应的rowid值，然后根据rowid直接从表中得到具体的数据，这种查找方式称为索引扫描。在索引中，除了存储每个索引的值外，索引还存储具体此值的行对应的ROWID值。
    索引扫描由两步组成：
 
@@ -176,9 +187,9 @@ st->e
   通过唯一索引查找一个数值经常返回单个ROWID，如果存在UNIQUE或PRIMARY KEY约束(它保证了语句只存取单行)的话，Oracle经常实现唯一性扫描。
 - **索引范围扫描(index range scan)**
   使用一个索引存取多行数据。以下三种情况会使用index range scan：
-  1. 在唯一索引列上使用了range操作符(> < <> >= <= between and)
-  2. 在组合索引上，只使用部分列进行查询，导致查询出多行
-  3. 在非唯一索引列上进行查询
+  - 在唯一索引列上使用了range操作符(> < <> >= <= between and)
+  - 在组合索引上，只使用部分列进行查询，导致查询出多行
+  - 在非唯一索引列上进行查询
 - **索引全扫描(index full scan)**
   与全表扫描相对应，也有相应的全索引扫描而且此时查询出的数据都必须从索引中可以直接得到。
 - **索引快速扫描(index fast full scan)**
@@ -191,135 +202,304 @@ Join是一种试图将两个表结合在一起的谓词，一次只能连接两�
 
 - **排序合并连接(Sort Merge Join(SMJ))**
   内部连接过程：
-  1. 首先生成row source1需要的数据，然后对这些数据按照连接操作相关列进行排序。
-  2. 随后生成row source2需要的数据，然后对这些数据按照与sort source1对应的连接操作关联列排序。
-  3. 最后两边已排序的行被放在一起执行合并操作，即将两个row source按照连接条件连接起来。
+  - 首先生成row source1需要的数据，然后对这些数据按照连接操作相关列进行排序。
+  - 随后生成row source2需要的数据，然后对这些数据按照与sort source1对应的连接操作关联列排序。
+  - 最后两边已排序的行被放在一起执行合并操作，即将两个row source按照连接条件连接起来。
 
 如果row source已经在关联列上被排序，则该连结操作就不需要再进行sort操作，这样可以大大提高这种连接操作的连接速度，因为排序是个极其耗费资源的操作。预先排序的row source包括已经被索引的列或row source已经在前面的步骤中被排序了。另外，尽管合并两个row source的过程是串行的，但是可以并行访问这两个row source（如并行读入数据，排序）。
  排序是一个费时，费资源的操作，基于这个原因，SMJ通常不是一种有效率的连接方式，但当row source已经排好序的前提下，SMJ的效率还是很可观的。
 
-1. **嵌套循环连接(Nested Loops(NL))**
-    这个连接方法有驱动表（外部表）的概念。该连接过程就是一个2层嵌套循环，所以外层循环的次数越少越好，这就是我们将小表作为驱动表（用于外层循环）的理论依据。但是这个理论只是一般指导原则，因为遵循这个理论并不能总保证使语句产生的I/0次数最少。
-    在NESTED LOOPS连接中，Oracle读取外部表的每一行，然后再内部表中检查是否有匹配的行，所有被匹配的行都被放到结果集中，然后处理外部表的下一行。如果外部表比较小，并且在内部表中有唯一高选择性非唯一索引时，使用这种方法可以得到较好的效率。NESTED LOOPS有其它连接方法没有的一个优点：可以先返回已经连接的行，而不必等待所有的连接操作处理完成才返回数据，这可以实现快速的响应时间。
-    如果不适用并行操作，最好的驱动表是那些应用了where条件限制后，可以返回较少行数据的表。对于并行查询，我们经常选择大表作为驱动表，因为大表可以充分利用并行功能。当然，有时对查询使用并行操作不一定比查询不使用并行操作效率高，因为最后可能每个表只有很少的行符合限制条件，而且还要看你的硬件配置是否支持并行（多个CPU，多个硬盘控制器）。
+**嵌套循环连接(Nested Loops(NL))**
+这个连接方法有驱动表（外部表）的概念。该连接过程就是一个2层嵌套循环，所以外层循环的次数越少越好，这就是我们将小表作为驱动表（用于外层循环）的理论依据。但是这个理论只是一般指导原则，因为遵循这个理论并不能总保证使语句产生的I/0次数最少。
+在NESTED LOOPS连接中，Oracle读取外部表的每一行，然后再内部表中检查是否有匹配的行，所有被匹配的行都被放到结果集中，然后处理外部表的下一行。如果外部表比较小，并且在内部表中有唯一高选择性非唯一索引时，使用这种方法可以得到较好的效率。NESTED LOOPS有其它连接方法没有的一个优点：可以先返回已经连接的行，而不必等待所有的连接操作处理完成才返回数据，这可以实现快速的响应时间。
+如果不适用并行操作，最好的驱动表是那些应用了where条件限制后，可以返回较少行数据的表。对于并行查询，我们经常选择大表作为驱动表，因为大表可以充分利用并行功能。当然，有时对查询使用并行操作不一定比查询不使用并行操作效率高，因为最后可能每个表只有很少的行符合限制条件，而且还要看你的硬件配置是否支持并行（多个CPU，多个硬盘控制器）。
 
-2. **哈希连接(Hash Join)**
-    哈希连接是在Oracle7.3以后引入的，从理论上来说比NL和SMJ更高效，而且只用在CBO优化器中。
-    较小的row source被用来构建hash table与bitmap，第二个row source用来于第一个row source生成的hash table进行匹配，以便进行进一步的连接。Bitmap被用来作为一种比较快的查找方法，来检查再hash table中是否有匹配的行。特别的，当hash table比较大而不能全部容纳在内存中时，这种查找方法更为有用。这种连接方法也有驱动表的概念，被构建为hash table与bitmap的表为驱动表，当被构建的hash table与bitmap能被容纳在内存中，这种连接方式的效率极高。
-    要是哈希连接有效，需要设置HASH_JOIN_ENABLED=TRUE,缺省情况下该参数为TRUE,另外还需要设置hash_area_size参数，以使哈希连接高效运行，因为哈希连接会在参数指定的大小的内存中运行，过小的参数会使哈希连接的性能比其他连接方式低。
+**哈希连接(Hash Join)**
+哈希连接是在Oracle7.3以后引入的，从理论上来说比NL和SMJ更高效，而且只用在CBO优化器中。
+较小的row source被用来构建hash table与bitmap，第二个row source用来于第一个row source生成的hash table进行匹配，以便进行进一步的连接。Bitmap被用来作为一种比较快的查找方法，来检查再hash table中是否有匹配的行。特别的，当hash table比较大而不能全部容纳在内存中时，这种查找方法更为有用。这种连接方法也有驱动表的概念，被构建为hash table与bitmap的表为驱动表，当被构建的hash table与bitmap能被容纳在内存中，这种连接方式的效率极高。
+要是哈希连接有效，需要设置HASH_JOIN_ENABLED=TRUE,缺省情况下该参数为TRUE,另外还需要设置hash_area_size参数，以使哈希连接高效运行，因为哈希连接会在参数指定的大小的内存中运行，过小的参数会使哈希连接的性能比其他连接方式低。
 
-3. **表访问的执行计划**
+**表访问的执行计划**
 
-  1、table access full：全表扫描。它会访问表中的每一条记录。
+-   table access full：全表扫描。它会访问表中的每一条记录。
+-   table access by user rowid：输入源rowid来自于用户指定。
+-  table access by index rowid：输入源rowid来自于索引。
+-   table access by global index rowid：全局索引获取rowid，然后再回表。
+-   table access by local index rowid：分区索引获取rowid，然后再回表。
+-  table access cluster：通过索引簇的键来访问索表。
+-  external table access：访问外部表。
+-  result cache：结果集可能来自于缓存。
+-   mat_view rewrite access：物化视图。
 
-  2、table access by user rowid：输入源rowid来自于用户指定。
+  **索引访问的执行计划**
 
-  3、table access by index rowid：输入源rowid来自于索引。
+-  index unique scan：只返回一条rowid的索引扫描，或者unique索引的等值扫描。
+- index range scan：返回多条rowid的索引扫描。
+-  index full scan：顺序扫描整个索引。
+-  index fast full scan：多块读方式扫描整个索引。
+-  index skip scan：多应用于组合索引中，引导键值为空的情况下索引扫描。
+-  and-equal：合并来自于一个或多个索引的结果集。
+-  domain index：应用域索引。
 
-  4、table access by global index rowid：全局索引获取rowid，然后再回表。
+ **表连接的执行计划**
 
-  5、table access by local index rowid：分区索引获取rowid，然后再回表。
+-  SORT MERGE JOIN（排序-合并连接）
+-   NESTED LOOPS（嵌套循环）
+-  HASH JOIN（哈希连接）
+-   CARTESIAN PRODUCT（笛卡尔积）
 
-  6、table access cluster：通过索引簇的键来访问索表。
+## 🔻[常用oracle hints]()
 
-  7、external table access：访问外部表。
+ **/*+ALL_ROWS*/**
 
-  8、result cache：结果集可能来自于缓存。
+👆表明对语句块选择基于开销的优化方法,并获得最佳吞吐量,使资源消耗最小化.
 
-  9、mat_view rewrite access：物化视图。
+example:👇
 
-  索引访问的执行计划
+SELECT /*+ALL+_ROWS*/ EMP_NO,EMP_NAM,DAT_IN FROM BSEMPMS WHERE EMP_NO='SCOTT';
 
-  1、index unique scan：只返回一条rowid的索引扫描，或者unique索引的等值扫描。
+ **/*+FIRST_ROWS*/**
 
-  2、index range scan：返回多条rowid的索引扫描。
+👆表明对语句块选择基于开销的优化方法,并获得最佳响应时间,使资源消耗最小化.
 
-  3、index full scan：顺序扫描整个索引。
+example:👇
 
-  4、index fast full scan：多块读方式扫描整个索引。
+SELECT /*+FIRST_ROWS*/ EMP_NO,EMP_NAM,DAT_IN FROM BSEMPMS WHERE EMP_NO='SCOTT';
 
-  5、index skip scan：多应用于组合索引中，引导键值为空的情况下索引扫描。
+ **/*+CHOOSE*/**
 
-  6、and-equal：合并来自于一个或多个索引的结果集。
+👆表明如果数据字典中有访问表的统计信息,将基于开销的优化方法,并获得最佳的吞吐量;
 
-  7、domain index：应用域索引。
+👆表明如果数据字典中没有访问表的统计信息,将基于规则开销的优化方法;
 
-  表连接的执行计划
+example:👇
 
-   
+SELECT /*+CHOOSE*/ EMP_NO,EMP_NAM,DAT_IN FROM BSEMPMS WHERE EMP_NO='SCOTT';
 
-  表连接的几种方式：
+**/*+RULE*/**
 
-  1、SORT MERGE JOIN（排序-合并连接）
+👆表明对语句块选择基于规则的优化方法.
 
-  2、NESTED LOOPS（嵌套循环）
+example:👇
 
-  3、HASH JOIN（哈希连接）
+SELECT /*+ RULE */ EMP_NO,EMP_NAM,DAT_IN FROM BSEMPMS WHERE EMP_NO='SCOTT';
 
-  4、CARTESIAN PRODUCT（笛卡尔积）
+**/*+FULL(TABLE)*/**
 
-4. 
+👆表明对表选择全局扫描的方法.
 
-### 总结
+example:👇
 
-各连接方法试用的场景：
+SELECT /*+FULL(A)*/ EMP_NO,EMP_NAM FROM BSEMPMS A WHERE EMP_NO='SCOTT';
 
-- **排序-合并连接**
-  1. 对于非等值连接，这种方式效率比较高
-  2. 如果在关联列上有索引，效果更好
-  3. 对于将两个比较大的row source做连接，该连接方法比NL要好
-  4. 如果sort merge返回的row source过大，则又会使用过多的rowid在表中查询数据时，数据库性能下降，因为过多的I/O
-- **嵌套循环**
-  1. 如果外部表比较小，并且在内部表上有唯一索引，或者高选择性索引
-  2. 该方法有其它连接方法没有的优点：可以先返回已经连接的行，而不必等待所有的连接操作处理完才返回数据，这样可以实现快速的响应时间
-- **哈希连接**
-  1. 一般来说，其效率好于其它两种连接，但这种连接只能用在CBO优化中，而且需要设置合适的。参数
-  2. 只用于等值连接
+**/*+ROWID(TABLE)*/**
 
-#### 1.1字段解释
+👆提示明确表明对指定表根据ROWID进行访问.
 
-| Operation              | 当前操作的内容                                               |
-| ---------------------- | ------------------------------------------------------------ |
-| **Object**             | **操作对象**                                                 |
-| **Optimizer**          | **优化器**                                                   |
-| **Cost（CPU)**         | **Oracle 计算出来的一个数值（代价），用于说明SQL执行的代价。** |
-| **Cardinality**        | **基数**                                                     |
-| **Bytes**              | **字节**                                                     |
-| **Access Predicates ** | **通过某种方式定位了需要的数据，然后读取出这些结果集，叫做Access。<br/>表示这个谓词条件的值将会影响数据的访问路径（表还是索引）。** |
-| **Filter Predicates**  | **把所有的数据都访问了，然后过滤掉不需要的数据，这种方式叫做filter 。<br/>表示谓词条件的值不会影响数据的访问路径，只起过滤的作用。** |
+example:👇
 
-#### 2.1🔽🔽🔽执行顺序的原则
+SELECT /*+ROWID(BSEMPMS)*/ * FROM BSEMPMS WHERE ROWID&gt;='AAAAAAAAAAAAAA'
 
-执行顺序的原则是：由上至下，从右向左
-由上至下：在执行计划中一般含有多个节点，相同级别(或并列)的节点，靠上的优先执行，靠下的后执行
-从右向左：在某个节点下还存在多个子节点，先从最靠右的子节点开始执行。
+AND EMP_NO='SCOTT';
 
-**一般按缩进长度来判断，缩进最大的最先执行，如果有2行缩进一样，那么就先执行上面的。**
+ **/*+CLUSTER(TABLE)*/**
+
+👆提示明确表明对指定表选择簇扫描的访问方法,它只对簇对象有效.
+
+example:👇
+
+SELECT /*+CLUSTER */ BSEMPMS.EMP_NO,DPT_NO FROM BSEMPMS,BSDPTMS
+
+WHERE DPT_NO='TEC304' AND BSEMPMS.DPT_NO=BSDPTMS.DPT_NO;
+
+**/*+INDEX(TABLE INDEX_NAME)*/**
+
+👆表明对表选择索引的扫描方法.
+
+example:👇
+
+SELECT /*+INDEX(BSEMPMS SEX_INDEX) USE SEX_INDEX BECAUSE THERE ARE FEWMALE BSEMPMS */ FROM BSEMPMS WHERE SEX='M';
+
+ **/*+INDEX_ASC(TABLE INDEX_NAME)*/**
+
+👆表明对表选择索引升序的扫描方法.
+
+example:👇
+
+SELECT /*+INDEX_ASC(BSEMPMS PK_BSEMPMS) */ FROM BSEMPMS WHERE DPT_NO='SCOTT';
+
+**/*+INDEX_COMBINE*/**
+
+👆为指定表选择位图访问路经,如果INDEX_COMBINE中没有提供作为参数的索引,将选择出位图索引的布尔组合方式.
+
+example:👇
+
+SELECT /*+INDEX_COMBINE(BSEMPMS SAL_BMI HIREDATE_BMI)*/ * FROM BSEMPMS
+
+WHERE SAL&lt;5000000 AND HIREDATE&lt;SYSDATE;
+
+**/*+INDEX_JOIN(TABLE INDEX_NAME)*/**
+
+👆提示明确命令优化器使用索引作为访问路径.
+
+example:👇
+
+SELECT /*+INDEX_JOIN(BSEMPMS SAL_HMI HIREDATE_BMI)*/ SAL,HIREDATE
+
+FROM BSEMPMS WHERE SAL&lt;60000;
+
+**/*+INDEX_DESC(TABLE INDEX_NAME)*/**
+
+👆表明对表选择索引降序的扫描方法.
+
+example:👇
+
+SELECT /*+INDEX_DESC(BSEMPMS PK_BSEMPMS) */ FROM BSEMPMS WHERE DPT_NO='SCOTT';
+
+ **/*+INDEX_FFS(TABLE INDEX_NAME)*/**
+
+👆对指定的表执行快速全索引扫描,而不是全表扫描的办法.
+
+example:👇
+
+SELECT /*+INDEX_FFS(BSEMPMS IN_EMPNAM)*/ * FROM BSEMPMS WHERE DPT_NO='TE垃圾产品';
+
+ **/*+ADD_EQUAL TABLE INDEX_NAM1,INDEX_NAM2,...*/**
+
+提示明确进行执行规划的选择,将几个单列索引的扫描合起来.
+
+example:👇
+
+SELECT /*+INDEX_FFS(BSEMPMS IN_DPTNO,IN_EMPNO,IN_SEX)*/ * FROM BSEMPMS WHERE EMP_NO='SCOTT' AND DPT_NO='TDC306';
+
+**/*+USE_CONCAT*/**
+
+对查询中的WHERE后面的OR条件进行转换为UNION ALL的组合查询.
+
+example:👇
+
+SELECT /*+USE_CONCAT*/ * FROM BSEMPMS WHERE DPT_NO='TDC506' AND SEX='M';
+
+ **/*+NO_EXPAND*/**
+
+对于WHERE后面的OR 或者IN-LIST的查询语句,NO_EXPAND将阻止其基于优化器对其进行扩展.
+
+example:👇
+
+SELECT /*+NO_EXPAND*/ * FROM BSEMPMS WHERE DPT_NO='TDC506' AND SEX='M';
+
+ **/*+NOWRITE*/**
+
+禁止对查询块的查询重写操作.
+
+**/*+REWRITE*/**
+
+👆可以将视图作为参数.
+
+ **/*+MERGE(TABLE)*/**
+
+👆能够对视图的各个查询进行相应的合并.
+
+example:👇
+
+SELECT /*+MERGE(V) */ A.EMP_NO,A.EMP_NAM,B.DPT_NO FROM BSEMPMS A (SELET DPT_NO
+
+,AVG(SAL) AS AVG_SAL FROM BSEMPMS B GROUP BY DPT_NO) V WHERE A.DPT_NO=V.DPT_NO
+
+AND A.SAL&gt;V.AVG_SAL;
+
+**/*+NO_MERGE(TABLE)*/**
+
+对于有可合并的视图不再合并.
+
+example:👇
+
+SELECT /*+NO_MERGE(V) */ A.EMP_NO,A.EMP_NAM,B.DPT_NO FROM BSEMPMS A (SELECT DPT_NO,AVG(SAL) AS AVG_SAL FROM BSEMPMS B GROUP BY DPT_NO) V WHERE A.DPT_NO=V.DPT_NO AND A.SAL&gt;V.AVG_SAL;
+
+**/*+ORDERED*/**
+
+👆根据表出现在FROM中的顺序,ORDERED使ORACLE依此顺序对其连接.
+
+example:👇
+
+SELECT /*+ORDERED*/ A.COL1,B.COL2,C.COL3 FROM TABLE1 A,TABLE2 B,TABLE3 C WHERE A.COL1=B.COL1 AND B.COL1=C.COL1;
+
+ **/*+USE_NL(TABLE)*/**
+
+将指定表与嵌套的连接的行源进行连接,并把指定表作为内部表.
+
+example:👇
+
+SELECT /*+ORDERED USE_NL(BSEMPMS)*/ BSDPTMS.DPT_NO,BSEMPMS.EMP_NO,BSEMPMS.EMP_NAM FROM BSEMPMS,BSDPTMS WHERE BSEMPMS.DPT_NO=BSDPTMS.DPT_NO;
+
+**/*+USE_MERGE(TABLE)*/**
+
+将指定的表与其他行源通过合并排序连接方式连接起来.
+
+example:👇
+
+SELECT /*+USE_MERGE(BSEMPMS,BSDPTMS)*/ * FROM BSEMPMS,BSDPTMS WHERE BSEMPMS.DPT_NO=BSDPTMS.DPT_NO;
+
+ **/*+USE_HASH(TABLE)*/**
+
+将指定的表与其他行源通过哈希连接方式连接起来.
+
+example:👇
+
+SELECT /*+USE_HASH(BSEMPMS,BSDPTMS)*/ * FROM BSEMPMS,BSDPTMS WHERE BSEMPMS.DPT_NO=BSDPTMS.DPT_NO;
+
+**/*+DRIVING_SITE(TABLE)*/**
+
+强制与ORACLE所选择的位置不同的表进行查询执行.
+
+example:👇
+
+SELECT /*+DRIVING_SITE(DEPT)*/ * FROM BSEMPMS,DEPT@BSDPTMS WHERE BSEMPMS.DPT_NO=DEPT.DPT_NO;
+
+ **/*+LEADING(TABLE)*/**
+
+将指定的表作为连接次序中的首表.
+
+ **/*+CACHE(TABLE)*/**
+
+当进行全表扫描时,CACHE提示能够将表的检索块放置在缓冲区缓存中最近最少列表LRU的最近使用端
+
+example:👇
+
+SELECT /*+FULL(BSEMPMS) CAHE(BSEMPMS) */ EMP_NAM FROM BSEMPMS;
+
+**/*+NOCACHE(TABLE)*/**
+
+👆当进行全表扫描时,CACHE提示能够将表的检索块放置在缓冲区缓存中最近最少列表LRU的最近使用端
+
+example:箱👇
+
+SELECT /*+FULL(BSEMPMS) NOCAHE(BSEMPMS) */ EMP_NAM FROM BSEMPMS;
+
+**/*+APPEND*/**
+
+👆直接插入到表的最后,可以提高速度.
+
+insert /*+append*/ into test1 select * from test4 ;
+
+ **/*+NOAPPEND*/**
+
+👆通过在插入语句生存期内停止并行模式来启动常规插入.
+
+insert /*+noappend*/ into test1 select * from test4 ;
 
 
 
-## SQL优化点（低级）
+## 🔻使用autotrace工具（只能SQLPLUS😐）
 
-
-
-
-
-
-
-
-
-## 使用autotrace工具（只能SQLPLUS😐）
-
-```
- 用法1：查看执行计划、统计信息并且返回sql结果集
+```plsql
+用法1：查看执行计划、统计信息并且返回sql结果集
 set autotrace on;  
 
 用法2：查看执行计划、统计信息不返回sql结果集：
-
 SQL> set autotrace traceonly;   
 
 ---方法3：只看执行计划不返回sql结果集：
-
 QL> set autotrace traceonly explain;  
 ```
 
@@ -516,109 +696,42 @@ Plan hash value: 2552596561
 
 I/O消耗：11129*8192/1024/1024=86.9M
 
-# Mysql的Sql优化笔记
+### 🔻总结
 
-## 操作符优化
+各连接方法试用的场景：
 
-**1、IN 操作符**
+- **排序-合并连接**
+  - 对于非等值连接，这种方式效率比较高
+  - 如果在关联列上有索引，效果更好
+  - 对于将两个比较大的row source做连接，该连接方法比NL要好
+  - 如果sort merge返回的row source过大，则又会使用过多的rowid在表中查询数据时，数据库性能下降，因为过多的I/O
+- **嵌套循环**
+  - 如果外部表比较小，并且在内部表上有唯一索引，或者高选择性索引
+  - 该方法有其它连接方法没有的优点：可以先返回已经连接的行，而不必等待所有的连接操作处理完才返回数据，这样可以实现快速的响应时间
+- **哈希连接**
+  - 一般来说，其效率好于其它两种连接，但这种连接只能用在CBO优化中，而且需要设置合适的。参数
+  - 只用于等值连接
 
-用IN写出来的SQL的优点是比较容易写及清晰易懂，这比较适合现代软件开发的风格。但是用IN的SQL性能总是比较低的，从Oracle执行的步骤来分析用IN的SQL与不用IN的SQL有以下区别：
+#### 字段解释
 
-ORACLE试图将其转换成多个表的连接，如果转换不成功则先执行IN里面的子查询，再查询外层的表记录，如果转换成功则直接采用多个表的连接方式查询。由此可见用IN的SQL至少多了一个转换的过程。一般的SQL都可以转换成功，但对于含有分组统计等方面的SQL就不能转换了。
+| Operation              | 当前操作的内容                                               |
+| ---------------------- | ------------------------------------------------------------ |
+| **Object**             | **操作对象**                                                 |
+| **Optimizer**          | **优化器**                                                   |
+| **Cost（CPU)**         | **Oracle 计算出来的一个数值（代价），用于说明SQL执行的代价。** |
+| **Cardinality**        | **基数**                                                     |
+| **Bytes**              | **字节**                                                     |
+| **Access Predicates ** | **通过某种方式定位了需要的数据，然后读取出这些结果集，叫做Access。<br/>表示这个谓词条件的值将会影响数据的访问路径（表还是索引）。** |
+| **Filter Predicates**  | **把所有的数据都访问了，然后过滤掉不需要的数据，这种方式叫做filter 。<br/>表示谓词条件的值不会影响数据的访问路径，只起过滤的作用。** |
 
-**推荐方案：**在业务密集的SQL当中尽量不采用IN操作符，用EXISTS 方案代替。
+#### 🔽执行顺序的原则
 
-**2、NOT IN操作符**
+**执行顺序的原则是：<b style='color:red'>由上至下</b>，<b style='color:red'>从右向左</b>**
+**<b style='color:red'>由上至下</b>：在执行计划中一般含有多个节点，相同级别(或并列)的节点，靠上的优先执行，靠下的后执行**
+**<b style='color:red'>从右向左</b>：在某个节点下还存在多个子节点，先从最靠右的子节点开始执行。**
 
-此操作是强列不推荐使用的，因为它不能应用表的索引。
-
-**推荐方案：**用NOT EXISTS 方案代替
-
-**3、IS NULL 或IS NOT NULL操作**（判断字段是否为空）
-
-判断字段是否为空一般是不会应用索引的，因为索引是不索引空值的。
-
-**推荐方案**：用其它相同功能的操作运算代替，如：a is not null 改为 a>0 或a>’’等。不允许字段为空，而用一个缺省值代替空值，如申请中状态字段不允许为空，缺省为申请。
-
-**4、> 及 < 操作符（大于或小于操作符）**
-
-大于或小于操作符一般情况下是不用调整的，因为它有索引就会采用索引查找，但有的情况下可以对它进行优化，如一个表有100万记录，一个数值型字段A，30万记录的A=0，30万记录的A=1，39万记录的A=2，1万记录的A=3。那么执行A>2与A>=3的效果就有很大的区别了，因为A>2时ORACLE会先找出为2的记录索引再进行比较，而A>=3时ORACLE则直接找到=3的记录索引。
-
-**5、LIKE操作符**
-
-LIKE操作符可以应用通配符查询，里面的通配符组合可能达到几乎是任意的查询，但是如果用得不好则会产生性能上的问题，如LIKE ‘%5400%’ 这种查询不会引用索引，而LIKE ‘X5400%’则会引用范围索引。
-
-一个实际例子：用YW_YHJBQK表中营业编号后面的户标识号可来查询营业编号 YY_BH LIKE ‘%5400%’ 这个条件会产生全表扫描，如果改成YY_BH LIKE ’X5400%’ OR YY_BH LIKE ’B5400%’ 则会利用YY_BH的索引进行两个范围的查询，性能肯定大大提高。
-
-**6、UNION操作符**
-
-UNION在进行表链接后会筛选掉重复的记录，所以在表链接后会对所产生的结果集进行排序运算，删除重复的记录再返回结果。实际大部分应用中是不会产生重复的记录，最常见的是过程表与历史表UNION。如：
-select * from gc_dfys
-union
-select * from ls_jg_dfys
-这个SQL在运行时先取出两个表的结果，再用排序空间进行排序删除重复的记录，最后返回结果集，如果表数据量大的话可能会导致用磁盘进行排序。
-
-**推荐方案：**采用UNION ALL操作符替代UNION，因为UNION ALL操作只是简单的将两个结果合并后就返回。
-
-select * from gc_dfys
-union all
-select * from ls_jg_dfys
-
-### **SQL书写的影响**
-
-**1、同一功能同一性能不同写法SQL的影响。**
-
-如一个SQL在A程序员写的为  Select * from zl_yhjbqk
-
-B程序员写的为 Select * from dlyx.zl_yhjbqk（带表所有者的前缀）
-
-C程序员写的为 Select * from DLYX.ZLYHJBQK（大写表名）
-
-D程序员写的为 Select *  from DLYX.ZLYHJBQK（中间多了空格）
-
-以上四个SQL在ORACLE分析整理之后产生的结果及执行的时间是一样的，但是从ORACLE共享内存SGA的原理，可以得出ORACLE对每个SQL 都会对其进行一次分析，并且占用共享内存，如果将SQL的字符串及格式写得完全相同，则ORACLE只会分析一次，共享内存也只会留下一次的分析结果，这不仅可以减少分析SQL的时间，而且可以减少共享内存重复的信息，ORACLE也可以准确统计SQL的执行频率。
-
-**2、WHERE后面的条件顺序影响**
-
-WHERE子句后面的条件顺序对大数据量表的查询会产生直接的影响。如：
-Select * from zl_yhjbqk where dy_dj = '1KV以下' and xh_bz=1
-Select * from zl_yhjbqk where xh_bz=1 and dy_dj = '1KV以下'
-以上两个SQL中dy_dj（电压等级）及xh_bz（销户标志）两个字段都没进行索引，所以执行的时候都是全表扫描，第一条SQL的dy_dj = '1KV以下'条件在记录集内比率为99%，而xh_bz=1的比率只为0.5%，在进行第一条SQL的时候99%条记录都进行dy_dj及xh_bz的比较，而在进行第二条SQL的时候0.5%条记录都进行dy_dj及xh_bz的比较，以此可以得出第二条SQL的CPU占用率明显比第一条低。
-
-**3、查询表顺序的影响**
-
-在FROM后面的表中的列表顺序会对SQL执行性能影响，在没有索引及ORACLE没有对表进行统计分析的情况下，ORACLE会按表出现的顺序进行链接，由此可见表的顺序不对时会产生十分耗服物器资源的数据交叉。（注：如果对表进行了统计分析，ORACLE会自动先进小表的链接，再进行大表的链接）
-
-### **SQL语句索引的利用**
-
-**1、操作符优化（同上）**
-
-**2、对条件字段的一些优化**
-
-**采用函数处理的字段不能利用索引，**如：
-
-substr(hbs_bh,1,4)=’5400’，优化处理：hbs_bh like ‘5400%’
-
-trunc(sk_rq)=trunc(sysdate)， 优化处理：sk_rq>=trunc(sysdate) and sk_rq<trunc(sysdate+1)
-
-进行了显式或隐式的运算的字段不能进行索引，如：ss_df+20>50，优化处理：ss_df>30
-
-‘X’ || hbs_bh>’X5400021452’，优化处理：hbs_bh>’5400021542’
-
-sk_rq+5=sysdate，优化处理：sk_rq=sysdate-5
-
-hbs_bh=5401002554，优化处理：hbs_bh=’ 5401002554’，注：此条件对hbs_bh 进行隐式的to_number转换，因为hbs_bh字段是字符型。
-
-**条件内包括了多个本表的字段运算时不能进行索引**，如：ys_df>cx_df，无法进行优化
-qc_bh || kh_bh=’5400250000’，优化处理：qc_bh=’5400’ and kh_bh=’250000’
-
-<h2 style='color:#D886C7'>SQL优化的一些方法</h1>
+**一般按缩进长度来判断，缩进最大的最先执行，如果有2行缩进一样，那么就先执行上面的。**
 
 
-##### orcale
 
-- [Oracle SQL性能优化40条](https://mp.weixin.qq.com/s/GCS2m03zAfXoQdFBhy0JXw)
-- [关于Oracle的sql优化](https://mp.weixin.qq.com/s/YI40HEZck49nnHXouSKZOw)
-
-#####  mysql
 
