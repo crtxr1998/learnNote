@@ -148,6 +148,8 @@ SELECT /*+INDEX(mmp <INDEXNAME>)*/* FROM TB_BIZ_JZGJBXX mmp
 
 ### 相关的概念
 
+- **<b style='color:#2FB0E2'>CBO</b>是基于成本的优化器**
+
 - **Rowid的概念**
   rowid是一个伪列，这个列不是用户定义而是系统自己给加上的。每个表都有一个rowid的伪列，表中并不物理存储ROWID的值，但可以像使用其他列那样使用它，只是不能删除修改该列。一旦一行数据掺入数据库，则rowid在该行的生命周期内是唯一的，即使该行产生行迁移，行的rowid也不会改变。
 - **Recursive SQL概念**
