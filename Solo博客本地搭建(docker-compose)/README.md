@@ -133,9 +133,9 @@ docker-compose停止
 
 >docker-compose -f /root/solo-blog/solo-in-docker-master/http/docker-compose.yml  down  
 
-# solo博客美化
+# solo博客美化👇
 
-
+#### 添加网易云播放器
 
 ```html
 <iframe id="wymusil" frameborder="no" class="ifream" border="0" marginwidth="0" marginheight="0" width=20% height=86  style='position:fixed;top:15%;right:5px;z-index:9999' src="">
@@ -153,6 +153,7 @@ window.onload = function () {
 ```
 
 ```javascript
+<!--head头-->
 <link rel="stylesheet" href="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/APlayer.min.css">
 <link rel="stylesheet" href="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/dzcss.css">
 <div id="aplayer" class='ifream' style='position: fixed;top:10%;right:2%;width:20%;z-index: 999;'></div>
@@ -161,7 +162,7 @@ window.onload = function () {
 <div id="rotate" style="width: 30px; height: 30px;"></div>
 
 
-<!--footer-->
+<!--footer页脚-->
 <script src="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/APlayer.min.js"></script>
 <script src="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/loves.js"></script>
 <script src="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/dzjs.js"></script>
