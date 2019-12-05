@@ -11,7 +11,7 @@
 - ```shell
   # docker安装的mysql默认允许远程连接，可以使用Navicat等软件连接数据库
   # 进入容器mysql()
-  docker exec -it mysql bash
+  docker exec -it mysql5 bash
   
   # 进入数据库 p后面跟你的密码
   mysql -uroot -pXXX
@@ -25,8 +25,6 @@
   exit
   
   ```
-
-
 
 - **docker-compose down** 停止
 
@@ -64,3 +62,95 @@ docker cp /dockerData/mysql/mysqld.cnf mysql:/etc/mysql/mysql.conf.d/mysqld.cnf
 ```
 
 改完之后记得重启 MySQL，`docker restart mysql`
+
+# 使用Linux定时更新solo博客镜像
+
+检查工具包crontabs
+
+> rpm -qa | grep -i crontabs 
+
+ crontab安装
+
+> yum -y install crontab
+
+启动 crontabs
+
+> systemctl start crond
+
+编写定时脚本
+
+> vim /docker-restart.sh 
+>
+> ```shell
+> #!/bin/bash
+> 
+> #
+> # Solo docker 更新重启脚本
+> #
+> # 1. 请注意修改参数
+> # 2. 可将该脚本加入 crontab，每日凌晨运行来实现自动更新
+> #
+> 
+> docker pull b3log/solo
+> docker stop solo
+> docker rm solo
+> ```
+
+授予脚本运行权限
+
+> chmod -R 777 ./docker-restart.sh 
+
+给当前用户添加定时任务
+
+>crontab -e
+>
+>```sh
+>#每天 每隔3分钟执行一次
+>/3 * * * * /root/solo-blog/crontab/docker-restart.sh
+>```
+
+查看当前用户的定时任务
+
+>crontab -l
+
+查看定时任务执行日志(检查定时任务是否真的执行了)
+
+> tail -f 10 /var/log/cron
+
+查看脚本邮件（root未用户名）
+
+> cat /var/spool/mail/root
+
+Linux重命名文件（使用mv命令）
+
+> mv  <path/原文件名>  <path/命名后文件名>
+
+docker-compose启动
+
+> docker-compose -f /root/solo-blog/solo-in-docker-master/http/docker-compose.yml up -d
+
+docker-compose停止
+
+>docker-compose -f /root/solo-blog/solo-in-docker-master/http/docker-compose.yml  down  
+
+# solo博客美化
+
+
+
+```html
+<iframe id="wymusil" frameborder="no" class="ifream" border="0" marginwidth="0" marginheight="0" width=20% height=86  style='position:fixed;top:15%;right:5px;z-index:9999' src="">
+<script >
+window.onload = function () {
+           //歌曲ID列表
+         let ms=[32317208,1307099078,1309833126,28285910,1344200357
+  ,1379445403,496869422,1317671992,1388010329,33911781,567999629
+,490407216,1295655158,1373228032,1399858274,1376535045,1316434237];  
+           let index=Math.round(Math.random()*ms.length);
+          console.info(index);
+        $("#wymusil").attr("src","http://music.163.com/outchain/player?type=2&id="+ms[index]+"&auto=1&height=66");
+ }
+</script>
+```
+
+
+
