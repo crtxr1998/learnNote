@@ -152,5 +152,20 @@ window.onload = function () {
 </script>
 ```
 
+```javascript
+<link rel="stylesheet" href="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/APlayer.min.css">
+<link rel="stylesheet" href="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/dzcss.css">
+<div id="aplayer" class='ifream' style='position: fixed;top:10%;right:2%;width:20%;z-index: 999;'></div>
+
+<!-- 公告栏可使用 HTML、JavaScript，比如可以在此加入第三方统计 js -->
+<div id="rotate" style="width: 30px; height: 30px;"></div>
+
+
+<!--footer-->
+<script src="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/APlayer.min.js"></script>
+<script src="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/loves.js"></script>
+<script src="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/dzjs.js"></script>
+```
+
 
 
