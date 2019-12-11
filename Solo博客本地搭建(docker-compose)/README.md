@@ -1,11 +1,28 @@
-# 安装流程
+# docker-compose安装solo博客流程
 
-- **安装docker与docker-compose**
-- **这里不做演示自行百度☺**
+**安装docker及docker-compose(新版本自带)**
 
-#### docker-compose文件下载地址:[docker-compose.yml](https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo%E5%8D%9A%E5%AE%A2/docker-compose.yml)
+- ```shell
+  #出问题自行谷歌或百度，不作过多赘述
+  yum install curl -y && curl -fSsL get.docker.com |CHANNEL=stable sh 
+  systemctl start docker 
+  systemctl enable docker 
+  docker version
+  ```
+
+#### docker-compose文件下载地址:[docker-compose.yml](https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/docker-compose.yml )
 
 - 上传文件至服务器
+
+- vim .env
+
+- ```shell
+  host=192.168.201.130
+  scheme=http
+  mysql_prot=3306
+  solo_prot=8080
+  ```
+
 - 在当前文件下执行**docker-compose up -d**
 
 - ```shell
@@ -30,13 +47,11 @@
 
 - **docker-compose up -d**  重新启动
 
+  ------
+  
   
 
-#### 皮肤挂载
-
-> --v /dockerData/solo/skins/:/opt/solo/skins/ 
-
-## 数据库占用内存过大优化
+## 数据库占用内存过大优化(官网copy的)
 
 由于我们购买的服务器是内存只有 1G，然后 docker 安装的 MySQL 虽然很快，但是实际上占用内存非常大，之前服务器在腾讯云的时候就经常挂掉，排查了很久才发现是 docker 下 MySQL 的问题，迁移到阿里云后倒是没出先挂掉的问题，但是服务器内存占用也一直在 90% 以上，所以我们对 MySQL 容器进行一些优化。
  由于容器内不能 VIM，所以我们将 MySQL 的配置文件复制到服务器上改了之后再复制回去，也可以将配置文件挂载到服务器上，过程我不多讲，只讲核心部分。
@@ -91,9 +106,10 @@ docker cp /dockerData/mysql/mysqld.cnf mysql:/etc/mysql/mysql.conf.d/mysqld.cnf
 > # 2. 可将该脚本加入 crontab，每日凌晨运行来实现自动更新
 > #
 > 
-> docker pull b3log/solo
-> docker stop solo
-> docker rm solo
+> cd /root/solo-blog/solo-in-docker-master/http
+> /usr/local/bin/docker-compose  down
+> docker rmi b3log/solo
+> /usr/local/bin/docker-compose up -d
 > ```
 
 授予脚本运行权限
