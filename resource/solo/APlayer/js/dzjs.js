@@ -27,7 +27,7 @@ const ap = new APlayer({
 	listFolded: false,
 	listMaxHeight: 30,
 	mutex: true,
-	theme: color16(),
+	//theme: color16(),
 	audio: []
 });
 
