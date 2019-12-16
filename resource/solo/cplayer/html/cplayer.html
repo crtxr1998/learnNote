@@ -94,7 +94,6 @@
 					success: (res) => {
 						var lyrics = JSON.parse(res);
 						lyric = lyrics.lrc;
-
 					},
 					aync: false,
 					data: null
@@ -108,7 +107,7 @@
 				height: 3,
 				autoplay: true,
 				style: '',
-				big:false
+				big:true
 			});
 			player.add(musicInfo().pop());
 			player.add(musicInfo().pop());

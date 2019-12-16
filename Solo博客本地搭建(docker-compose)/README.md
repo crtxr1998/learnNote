@@ -179,9 +179,9 @@ window.onload = function () {
 
 
 <!--footer页脚-->
-<script src="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/APlayer.min.js"></script>
-<script src="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/loves.js"></script>
-<script src="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/dzjs.js"></script>
+<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/js/APlayer.min.js"></script>
+<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/js/loves.js"></script>
+<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/js/dzjs.js"></script>
 ```
 
 
