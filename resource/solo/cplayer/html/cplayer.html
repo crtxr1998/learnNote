@@ -28,12 +28,17 @@
 				left: 2%;
 				z-index: 222;
 			}
+			
+			aplayer .aplayer-list ol::-webkit-scrollbar-thumb {
+			    border-radius: 3px;
+			    background-color: #eee;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="app" class="skin"></div>
 		<!-- 加载 cplayer 脚本 -->
-		<script src="./cplayer.js"></script>
+		<script src="../js/cplayer.js"></script>
 		<script>
 			function createXHR() {
 				var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
@@ -102,7 +107,8 @@
 				playlist: musicInfo(),
 				height: 3,
 				autoplay: true,
-				style: 'position: fixed;top: 200px;left: 2%;z-index: 222;'
+				style: '',
+				big:false
 			});
 			player.add(musicInfo().pop());
 			player.add(musicInfo().pop());
