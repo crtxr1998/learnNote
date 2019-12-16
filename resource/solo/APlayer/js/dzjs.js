@@ -55,6 +55,7 @@ function load_music() {
 					item.artist = musics.author;
 					item.url = musics.mp3_url;
 					item.cover = musics.images;
+					item.theme= color16();
 					ap.list.add(item);
 					ap.list.switch(ap.list.audios.length - 1);
 					session_storage.setItem("musics", JSON.stringify(ap.list.audios));
