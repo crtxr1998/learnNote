@@ -4,119 +4,24 @@
 		<meta charset="utf-8">
 		<title>cPlayer</title>
 		<style type="text/css">
-			/*新加入隐藏滚动条效果*/
-			.title-menu-min{
-			    overflow-x: scroll !important;
-			}
-			.title-menu-min::-webkit-scrollbar {/*滚动条整体样式*/
-			    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
-			    height: 4px;
-			}
-			.title-menu-min::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-			    border-radius: 5px;
-			    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-			    background: rgba(0,0,0,0.2);
-			}
-			.title-menu-min::-webkit-scrollbar-track {/*滚动条里面轨道*/
-			    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-			    border-radius: 0;
-			    background: rgba(0,0,0,0.1);
-			}
-			.skins {
+			.skin {
 				position: fixed;
-				top: 200px;
-				left: 2%;
-				z-index: 222;
-			}
-			
-			aplayer .aplayer-list ol::-webkit-scrollbar-thumb {
-			    border-radius: 3px;
-			    background-color: #eee;
+				right: 1%;
 			}
 		</style>
 	</head>
 	<body>
-		<div id="app" class="skin"></div>
-		<!-- 加载 cplayer 脚本 -->
-		<script src="../js/cplayer.js"></script>
-		<script>
-			function createXHR() {
-				var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-				return xhr;
-			}
+		<div class="skin playdiv">
+			<div class="unlock" onclick="closer(this);"></div>
+			<div id="app">
+			</div>
+		</div>
 
-			function Ajax(obj) {
-				var xhr = new createXHR();
-				xhr.onreadystatechange = () => {
-					if (xhr.readyState === 4) {
-						if (xhr.status === 200) {
-							obj.success(xhr.responseText);
-						} else {
-							obj.error(xhr.status);
-						}
-					}
-				}
-				if (obj.method === 'get') {
-					xhr.open(obj.method, obj.url, obj.aync);
-					xhr.send(null);
-				}
-			};
-
-			function musicInfo() {
-				var list = [];
-				Ajax({
-					method: 'get',
-					url: 'https://api.uomg.com/api/rand.music?sort=热歌榜&format=json',
-					success: (res) => {
-						var musics = JSON.parse(res);
-						console.info(musics.data)
-						var lyric = lyrics(musics.data.url.substring(musics.data.url.indexOf("=") + 1, musics.data.url.lastIndexOf(".")));
-						list.push({
-							"name": musics.data.name,
-							"artist": musics.data.artistsname,
-							"src": musics.data.url,
-							"poster": musics.data.picurl,
-							"lyric": lyric.lyric
-						})
-					},
-					aync: false,
-					data: null
-				});
-				return list;
-			};
-
-
-			function lyrics(id) {
-				var lyric = "";
-				Ajax({
-					method: 'get',
-					url: 'https://api.imjad.cn/cloudmusic/?type=lyric&id=' + id,
-					success: (res) => {
-						var lyrics = JSON.parse(res);
-						lyric = lyrics.lrc;
-					},
-					aync: false,
-					data: null
-				});
-				return lyric;
-			};
-
-			let player = new cplayer({
-				element: document.getElementById('app'),
-				playlist: musicInfo(),
-				height: 3,
-				autoplay: true,
-				style: '',
-				big:true
-			});
-			player.add(musicInfo().pop());
-			player.add(musicInfo().pop());
-			player.add(musicInfo().pop());
-			player.add(musicInfo().pop());
-			player.add(musicInfo().pop());
-			player.on('ended', function() {
-				player.add(musicInfo().pop());
-			});
-		</script>
+		<div style="height: 2000px;">ss<div>
+				<!-- 加载 cplayer 脚本 -->
+				<script src="../js/cplayer.js"></script>
+				<script src="../js/excplayer.js">
+				
+				</script>
 	</body>
 </html>
