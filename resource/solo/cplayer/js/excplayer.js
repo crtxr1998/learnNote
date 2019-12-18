@@ -68,33 +68,33 @@ function musicInfo(arg) {
 			it: item
 		};
 	}
-	var t = function() {
-		Ajax({
-			method: 'get',
-			url: targetUrl,
-			success: (res) => {
-				let musics = JSON.parse(res);
-				musics = musics.data;
-				console.info(musics)
-				item = {
-					"name": musics.name,
-					"artist": musics.artistsname,
-					"src": musics.url,
-					"poster": musics.picurl,
-					"lyric": lyrics(musics.url.substring(musics.url.indexOf("=") + 1, musics.url.lastIndexOf(
-						".")))
-				}
-				list.push(item);
-				if (userPcAgent()) {
-					sessionStorage.setItem("musics", JSON.stringify(list));
-				}
-			},
-			aync: false,
-			data: null
-		});
+	var t = function(type) {
+		if (list.length < 10) {
+			Ajax({
+				method: 'get',
+				url: targetUrl,
+				success: (res) => {
+					let musics = JSON.parse(res);
+					musics = musics.data;
+					console.info(musics)
+					item = {
+						"name": musics.name,
+						"artist": musics.artistsname,
+						"src": musics.url,
+						"poster": musics.picurl,
+						"lyric": lyrics(musics.url.substring(musics.url.indexOf("=") + 1, musics.url.lastIndexOf(
+							".")))
+					}
+					list.push(item);
+				},
+				aync: false,
+				data: null
+			});
+		}
 	}
-	if (userPcAgent() && list.length < 10) {
+	if (userPcAgent()) {
 		t();
+		sessionStorage.setItem("musics", JSON.stringify(list));
 	} else {
 		t();
 	}
@@ -127,7 +127,7 @@ window.onload = function() {
 	const player = new cplayer({
 		element: document.getElementById('app'),
 		playlist: musicInfo("init").ms,
-		height: userPcAgent()===true?10:1,
+		height: userPcAgent() === true ? 10 : 1,
 		width: '',
 		big: true
 	});
@@ -158,7 +158,7 @@ window.onload = function() {
 			if (userPcAgent()) {
 				player.add(music);
 			} else {
-				let old =player.nowplay;
+				let old = player.nowplay;
 				player.add(music);
 				player.remove(old);
 			}
