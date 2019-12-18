@@ -62,7 +62,7 @@ function musicInfo(arg) {
 			it: item
 		};
 	}
-	if (list.length <= 9) {
+	if (list.length <1) {
 		Ajax({
 			method: 'get',
 			url: targetUrl,
@@ -111,9 +111,9 @@ window.onload = () => {
 	const player = new cplayer({
 		element: document.getElementById('app'),
 		playlist: musicInfo("init").ms,
-		height: 3,
+		height: 2,
 		width:'',
-		big: true
+		big: false
 	});
 
 	var new_scroll_position = 0;
@@ -137,9 +137,12 @@ window.onload = () => {
 		new_scroll_position = last_scroll_position;
 	});
 	player.on('ended', function() {
-		player.add(musicInfo("ended").it);
+		let music=musicInfo("ended").it;
+		if(music.hasOwnProperty("src")){
+			player.add(music);
+		}
 	});
 	setTimeout(() => {
 		player.play();
-	}, 1000);
+	}, 2000);
 }

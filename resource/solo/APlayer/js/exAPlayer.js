@@ -1,5 +1,7 @@
 var session_storage = window.sessionStorage;
 let sorts = ["热歌榜","新歌榜","飙升榜","抖音榜","电音榜"];
+creatSheet();
+playerAddClass();
 const ap = new APlayer({
 	container: document.getElementById('aplayer'),
 	listFolded: false,
@@ -32,6 +34,20 @@ function Ajax(obj) {
 		xhr.send(JSON.stringify(obj.data));
 	}
 };
+
+function creatSheet() {
+	var width = document.body.clientWidth + 272;
+	var style = '';
+	style+='.ifream:hover{opacity:1;transform:scale(1.2);-webkit-transform:scale(1.2);-moz-transform:scale(1.2);-ms-transform:scale(1.2);-o-transform:scale(1.2);transition:all 1s;-moz-transition:all 1s;-webkit-transition:all 1s}.ifream{opacity:.4;transform:scale(1);-webkit-transform:scale(1);-moz-transform:scale(1);-ms-transform:scale(1);-o-transform:scale(1);transition:all 1s;-moz-transition:all 1s;-webkit-transition:all 1s}@-webkit-keyframes rotate{from{-webkit-transform:rotate(0deg)}to{-webkit-transform:rotate(360deg)}}@-moz-keyframes rotate{from{-moz-transform:rotate(0deg)}to{-moz-transform:rotate(359deg)}}@-o-keyframes rotate{from{-o-transform:rotate(0deg)}to{-o-transform:rotate(359deg)}}@keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(359deg)}}.rotate{-webkit-transition-property:-webkit-transform;-webkit-transition-duration:1s;-moz-transition-property:-moz-transform;-moz-transition-duration:1s;-webkit-animation:rotate 3s linear infinite;-moz-animation:rotate 3s linear infinite;-o-animation:rotate 3s linear infinite;animation:rotate 3s linear infinite}';
+	this.styleEl = document.createElement('style')
+	this.styleEl.type = 'text/css'
+	this.styleEl.innerHTML = style;
+	document.getElementsByTagName('head').item(0).appendChild(this.styleEl)
+}
+
+function playerAddClass() {
+	document.getElementsByTagName('aplayer').classList.add("ifream");
+}
 
 function color16() {
 	var r = Math.floor(Math.random() * 256);
