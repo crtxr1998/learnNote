@@ -127,7 +127,7 @@ window.onload = function() {
 	const player = new cplayer({
 		element: document.getElementById('app'),
 		playlist: musicInfo("init").ms,
-		height: 2,
+		height: userPcAgent()===true?10:1,
 		width: '',
 		big: true
 	});
