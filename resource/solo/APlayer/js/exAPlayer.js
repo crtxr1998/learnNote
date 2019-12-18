@@ -46,7 +46,7 @@ function creatSheet() {
 }
 
 function playerAddClass() {
-	document.getElementsByTagName('aplayer').classList.add("ifream");
+	document.getElementById('aplayer').classList.add("ifream");
 }
 
 function color16() {
