@@ -38,7 +38,7 @@ function createXHR() {
 
 function Ajax(obj) {
 	var xhr = new createXHR();
-	xhr.onreadystatechange = () => {
+	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4) {
 			if (xhr.status === 200) {
 				obj.success(xhr.responseText);
@@ -68,7 +68,7 @@ function musicInfo(arg) {
 			it: item
 		};
 	}
-	var t = () => {
+	var t = function() {
 		Ajax({
 			method: 'get',
 			url: targetUrl,
@@ -114,7 +114,7 @@ function lyrics(id) {
 			lyric = lyrics.lrc.lyric;
 		},
 		aync: false,
-		error: () => {
+		error: function() {
 			lyric = "";
 		},
 		data: null
@@ -122,7 +122,7 @@ function lyrics(id) {
 	return lyric;
 };
 
-window.onload = () => {
+window.onload = function() {
 	console.info(userPcAgent())
 	const player = new cplayer({
 		element: document.getElementById('app'),
@@ -169,7 +169,7 @@ window.onload = () => {
 		player.play();
 		count++;
 	}, 1000);
-	setTimeout(() => {
+	setTimeout(function() {
 		if (count !== 0) {
 			clearInterval(interval);
 		}
