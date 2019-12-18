@@ -151,37 +151,38 @@ docker-compose停止
 
 # solo博客美化👇
 
-#### 添加网易云播放器
+#### 添加播放器
 
-```html
-<iframe id="wymusil" frameborder="no" class="ifream" border="0" marginwidth="0" marginheight="0" width=20% height=86  style='position:fixed;top:15%;right:5px;z-index:9999' src="">
-<script >
-window.onload = function () {
-           //歌曲ID列表
-         let ms=[32317208,1307099078,1309833126,28285910,1344200357
-  ,1379445403,496869422,1317671992,1388010329,33911781,567999629
-,490407216,1295655158,1373228032,1399858274,1376535045,1316434237];  
-           let index=Math.round(Math.random()*ms.length);
-          console.info(index);
-        $("#wymusil").attr("src","http://music.163.com/outchain/player?type=2&id="+ms[index]+"&auto=1&height=66");
- }
-</script>
-```
+📌CPlayer播放器
 
 ```javascript
 <!--head头-->
-<link rel="stylesheet" href="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/APlayer.min.css">
-<link rel="stylesheet" href="https://article-picture-resource-1300779066.cos.ap-chengdu.myqcloud.com/resource/solo-blog/dzcss.css">
-<div id="aplayer" class='ifream' style='position: fixed;top:10%;right:2%;width:20%;z-index: 999;'></div>
-
-<!-- 公告栏可使用 HTML、JavaScript，比如可以在此加入第三方统计 js -->
-<div id="rotate" style="width: 30px; height: 30px;"></div>
+<div style="position: fixed;right: 1%;top: 5%;z-index: 999;" id="cplayer">
+</div>
 
 
 <!--footer页脚-->
-<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/js/APlayer.min.js"></script>
 <script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/js/loves.js"></script>
-<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/js/dzjs.js"></script>
+<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/cplayer/js/cplayer.js"></script>
+<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/cplayer/js/excplayer.js"></script>
+```
+
+
+
+📌APlayer播放器(solo换肤)
+
+```javascript
+<!--head头-->
+<link rel="stylesheet" href="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/css/APlayer.min.css">
+
+<div id="aplayer"  style='position: fixed;top:10%;right:2%;z-index: 999;'></div>
+
+
+<!--footer页脚-->
+<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/js/loves.js"></script>
+<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/js/APlayer.min.js"></script>
+<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/js/exAPlayer.js"></script>
+
 ```
 
 

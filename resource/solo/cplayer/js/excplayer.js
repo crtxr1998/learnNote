@@ -9,7 +9,7 @@ function closer(c) {
 }
 
 function userPcAgent() {
-	return navigator.platform.indexOf("Win") == 0;
+	return navigator.platform.indexOf("Win") !== 0;
 }
 
 function creatSheet() {
@@ -74,7 +74,7 @@ function musicInfo(arg) {
 			url: targetUrl,
 			success: (res) => {
 				let musics = JSON.parse(res);
-				musics=musics.data;
+				musics = musics.data;
 				console.info(musics)
 				item = {
 					"name": musics.name,
@@ -123,6 +123,7 @@ function lyrics(id) {
 };
 
 window.onload = () => {
+	console.info(userPcAgent())
 	const player = new cplayer({
 		element: document.getElementById('app'),
 		playlist: musicInfo("init").ms,
@@ -154,16 +155,22 @@ window.onload = () => {
 	player.on('ended', function() {
 		let music = musicInfo("ended").it;
 		if (music.hasOwnProperty("src")) {
-			player.add(music);
+			if (userPcAgent()) {
+				player.add(music);
+			} else {
+				let old =player.nowplay;
+				player.add(music);
+				player.remove(old);
+			}
 		}
 	});
-	var count=0;
-	var interval= setInterval(function ()  {
+	var count = 0;
+	var interval = setInterval(function() {
 		player.play();
 		count++;
 	}, 1000);
 	setTimeout(() => {
-		if(count!==0){
+		if (count !== 0) {
 			clearInterval(interval);
 		}
 	}, 4000);
