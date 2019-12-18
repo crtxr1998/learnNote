@@ -9,7 +9,7 @@ function closer(c) {
 }
 
 function userPcAgent() {
-	return navigator.platform.indexOf("Win") !== 0;
+	return navigator.platform.indexOf("Win") == 0;
 }
 
 function creatSheet() {
