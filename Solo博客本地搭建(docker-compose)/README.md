@@ -155,7 +155,7 @@ docker-compose停止
 
 📌CPlayer播放器
 
-```javascript
+```html
 <!--head头-->
 <div style="position: fixed;right: 1%;top: 5%;z-index: 999;" id="cplayer">
 </div>
@@ -169,9 +169,9 @@ docker-compose停止
 
 
 
-📌APlayer播放器(solo换肤)
+📌APlayer播放器
 
-```javascript
+```html
 <!--head头-->
 <link rel="stylesheet" href="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/APlayer/css/APlayer.min.css">
 
@@ -186,4 +186,11 @@ docker-compose停止
 ```
 
 
+
+📌换肤功能
+
+```html
+<div id="skin"  onclick="changeSkin();"></div>
+<script src="https://raw.githack.com/crtxr1998/learnNote/master/resource/solo/Skin/js/changeskin.js"></script>
+```
 

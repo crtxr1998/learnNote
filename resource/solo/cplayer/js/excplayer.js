@@ -27,7 +27,7 @@ function creatSheet() {
 }
 
 function creatdiv() {
-	var app = '<div class="skin playdiv"><span class="unlock" onclick="closer(this);"></span><div id="app"></div></div>';
+	var app = '<div class="playdiv"><span class="unlock" onclick="closer(this);"></span><div id="app"></div></div>';
 	document.getElementById('cplayer').innerHTML = app;
 }
 
