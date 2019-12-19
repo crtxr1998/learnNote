@@ -66,7 +66,7 @@ function musicInfo(arg) {
 			it: item
 		};
 	}
-	if (list.length < 9) {
+	if (list.length < 10) {
 		let targetUrl = 'https://api.uomg.com/api/rand.music?sort=' + sorts[index] + '&format=json'
 		console.info(targetUrl)
 		Ajax({
@@ -86,7 +86,7 @@ function musicInfo(arg) {
 				}
 				list.push(item);
 				if (userPcAgent() && list.length > 0) {
-					sessionStorage.setItem("musics", JSON.stringify(list));
+					setItem(list)
 				}
 			},
 			aync: false,
@@ -99,6 +99,13 @@ function musicInfo(arg) {
 	};
 };
 
+
+function setItem(e){
+	sessionStorage.setItem("musics", JSON.stringify(e));
+}
+function clearItem(){
+	sessionStorage.removeItem(musics);
+}
 function lyrics(id) {
 	let lyric = "";
 	Ajax({
@@ -123,6 +130,7 @@ window.onload = function() {
 		playlist: musicInfo("init").ms,
 		height: userPcAgent() === true ? 10 : 1,
 		width: '',
+		volume :'0.3',
 		big: true
 	});
 
@@ -131,17 +139,17 @@ window.onload = function() {
 	var div = player.view.getPlayDiv();
 	window.addEventListener('scroll', (e) => {
 		last_scroll_position = window.scrollY;
+		//console.info("last={}---new={}", parseInt(last_scroll_position), parseInt(new_scroll_position))
 		if (new_scroll_position < last_scroll_position && last_scroll_position > 80) {
 			// ↓ scroll
 			div.classList.remove("musicScrollDown");
 			div.classList.add("musicScrollUp");
 			player.view.showInfo();
-		} else if (new_scroll_position > last_scroll_position) {
+		} else if (new_scroll_position > last_scroll_position && last_scroll_position < 80) {
 			// ↑ scroll
 			if (sessionStorage.getItem("close") !== "false") {
 				div.classList.remove("musicScrollUp");
 				div.classList.add("musicScrollDown");
-				player.view.showPlaylist();
 			}
 		}
 		new_scroll_position = last_scroll_position;
@@ -149,7 +157,7 @@ window.onload = function() {
 	player.on('ended', function() {
 		let music;
 		var addMusic = function() {
-			if (music.it.hasOwnProperty("src")&&player.nowplaypoint === player.playlist.length - 1) {
+			if (music.it.hasOwnProperty("src") && player.nowplaypoint === player.playlist.length - 1) {
 				player.add(music.it);
 			}
 		}
@@ -161,13 +169,16 @@ window.onload = function() {
 				music = musicInfo("ended");
 				console.info(player.mode !== 'singlecycle')
 				let old = player.nowplay;
-				addMusic();
 				player.remove(old);
+				addMusic();
 			}
 		}
-
-		
 	});
+	player.on('error', function() {
+         let old = player.nowplay;
+         player.remove(old);
+	});
+	
 	var count = 0;
 	var interval = setInterval(function() {
 		player.play();

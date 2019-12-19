@@ -321,6 +321,11 @@
 								handlePlay: function() {
 									r.__paused && r.pause()
 								},
+								handleErrors: function() {
+									r.audioElement.onerror=function(){
+										r.emit("error")
+									}
+								},
 								handlePlaying: function() {
 									0 === r.audioElement.currentTime && r.emit("started")
 								},
@@ -367,7 +372,7 @@
 						value: function(e) {
 							var t = e.addEventListener.bind(e),
 								n = this.eventHandlers;
-							t("timeupdate", n.handleTimeUpdate), t("canplaythrough", n.handleCanPlayThrough), t("pause", n.handlePause),
+							t("error", n.handleErrors),t("timeupdate", n.handleTimeUpdate), t("canplaythrough", n.handleCanPlayThrough), t("pause", n.handlePause),
 								t("play", n.handlePlay), t("playing", n.handlePlaying), t("ended", n.handleEnded), t("loadeddata", n.handleLoadeddata)
 						}
 					}, {
@@ -375,7 +380,7 @@
 						value: function(e) {
 							var t = e.removeEventListener.bind(e),
 								n = this.eventHandlers;
-							t("timeupdate", n.handleTimeUpdate), t("canplaythrough", n.handleCanPlayThrough), t("pause", n.handlePause),
+							t("error", n.handleErrors),t("timeupdate", n.handleTimeUpdate), t("canplaythrough", n.handleCanPlayThrough), t("pause", n.handlePause),
 								t("play", n.handlePlay), t("playing", n.handlePlaying), t("ended", n.handleEnded), t("loadeddata", n.handleLoadeddata)
 						}
 					}, {
@@ -1219,7 +1224,7 @@
 				width: "",
 				size: "12px",
 				style: "",
-				height:5
+				height: 5
 			},
 			x = function(e) {
 				function t(e, n) {
@@ -1512,7 +1517,7 @@
 							} else this.setLyric(l(this.player.nowplay.name, this.player.nowplay.artist, !1), 1e3 * e, n.time)
 						} else this.setLyric(l(this.player.nowplay.name, this.player.nowplay.artist, !1))
 					}
-				}, {  
+				}, {
 					key: "destroy",
 					value: function() {
 						this.rootElement.parentElement.removeChild(this.rootElement)
