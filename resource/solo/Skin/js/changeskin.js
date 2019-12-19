@@ -33,7 +33,7 @@ function init_all_skins(skins_key) {
 			},
 			error: (status) => {
 				session_storage.setItem(skins_key,
-					"[{\"skinDirName\":\"next\"},{\"skinDirName\":\"owmx-3.0\"},{\"skinDirName\":\"Pinghsu\"},{\"skinDirName\":\"yilia\"}]"
+					"[{\"skinDirName\":\"next\"},{\"skinDirName\":\"owmx-3.0\"},{\"skinDirName\":\"Pinghsu\"},{\"skinDirName\":\"Casper\"},{\"skinDirName\":\"favourite\"}]"
 				);
 				location.reload();
 			},
