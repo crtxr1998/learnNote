@@ -57,8 +57,6 @@ function musicInfo(arg) {
 	let list = [];
 	let item = {};
 	let index = Math.floor(Math.random() * sorts.length);
-	let targetUrl = 'https://api.uomg.com/api/rand.music?sort=' + sorts[index] + '&format=json'
-	console.info(targetUrl)
 	if (userPcAgent() && sessionStorage.getItem("musics")) {
 		list = JSON.parse(sessionStorage.getItem("musics"));
 	}
@@ -68,35 +66,32 @@ function musicInfo(arg) {
 			it: item
 		};
 	}
-	var t = function(type) {
-		if (list.length < 10) {
-			Ajax({
-				method: 'get',
-				url: targetUrl,
-				success: (res) => {
-					let musics = JSON.parse(res);
-					musics = musics.data;
-					console.info(musics)
-					item = {
-						"name": musics.name,
-						"artist": musics.artistsname,
-						"src": musics.url,
-						"poster": musics.picurl,
-						"lyric": lyrics(musics.url.substring(musics.url.indexOf("=") + 1, musics.url.lastIndexOf(
-							".")))
-					}
-					list.push(item);
-				},
-				aync: false,
-				data: null
-			});
-		}
-	}
-	if (userPcAgent()) {
-		t();
-		sessionStorage.setItem("musics", JSON.stringify(list));
-	} else {
-		t();
+	if (list.length < 9) {
+		let targetUrl = 'https://api.uomg.com/api/rand.music?sort=' + sorts[index] + '&format=json'
+		console.info(targetUrl)
+		Ajax({
+			method: 'get',
+			url: targetUrl,
+			success: (res) => {
+				let musics = JSON.parse(res);
+				musics = musics.data;
+				console.info(musics)
+				item = {
+					"name": musics.name,
+					"artist": musics.artistsname,
+					"src": musics.url,
+					"poster": musics.picurl,
+					"lyric": lyrics(musics.url.substring(musics.url.indexOf("=") + 1, musics.url.lastIndexOf(
+						".")))
+				}
+				list.push(item);
+				if (userPcAgent() && list.length > 0) {
+					sessionStorage.setItem("musics", JSON.stringify(list));
+				}
+			},
+			aync: false,
+			data: null
+		});
 	}
 	return {
 		ms: list,
@@ -123,7 +118,6 @@ function lyrics(id) {
 };
 
 window.onload = function() {
-	console.info(userPcAgent())
 	const player = new cplayer({
 		element: document.getElementById('app'),
 		playlist: musicInfo("init").ms,
@@ -137,7 +131,7 @@ window.onload = function() {
 	var div = player.view.getPlayDiv();
 	window.addEventListener('scroll', (e) => {
 		last_scroll_position = window.scrollY;
-		if (new_scroll_position < last_scroll_position && last_scroll_position > 50) {
+		if (new_scroll_position < last_scroll_position && last_scroll_position > 80) {
 			// ↓ scroll
 			div.classList.remove("musicScrollDown");
 			div.classList.add("musicScrollUp");
@@ -153,16 +147,26 @@ window.onload = function() {
 		new_scroll_position = last_scroll_position;
 	});
 	player.on('ended', function() {
-		let music = musicInfo("ended").it;
-		if (music.hasOwnProperty("src")) {
-			if (userPcAgent()) {
-				player.add(music);
-			} else {
+		let music;
+		var addMusic = function() {
+			if (music.it.hasOwnProperty("src")&&player.nowplaypoint === player.playlist.length - 1) {
+				player.add(music.it);
+			}
+		}
+		if (userPcAgent()) {
+			music = musicInfo("ended");
+			addMusic();
+		} else {
+			if (player.mode !== 'singlecycle') {
+				music = musicInfo("ended");
+				console.info(player.mode !== 'singlecycle')
 				let old = player.nowplay;
-				player.add(music);
+				addMusic();
 				player.remove(old);
 			}
 		}
+
+		
 	});
 	var count = 0;
 	var interval = setInterval(function() {
