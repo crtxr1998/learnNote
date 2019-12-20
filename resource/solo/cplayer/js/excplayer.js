@@ -1,11 +1,35 @@
 var sorts = ["热歌榜", "新歌榜", "抖音榜", "电音榜"]
 creatSheet();
 creatdiv();
-
+closer();
 function closer(c) {
-	c.classList.contains("unlock") ? (c.classList.remove("unlock"),
-		c.classList.add("locked"), sessionStorage.setItem("close", false)) : (c.classList.remove("locked"),
-		c.classList.add("unlock"), sessionStorage.setItem("close", true))
+	if (arguments.length > 0) {
+		let play = () => {
+			let p = c.nextSibling;
+			if (p.classList.contains("musicScrollUp")) {
+				p.classList.remove("musicScrollUp");
+				p.classList.add("musicScrollDown");
+			} else {
+				p.classList.remove("musicScrollDown"), p.classList.add("musicScrollUp");
+			}
+		};
+		if (c.classList.contains("unlock")) {
+			c.classList.remove("unlock"),
+				c.classList.add("locked"), play(),
+				sessionStorage.setItem("close", false);
+		} else {
+			c.classList.remove("locked"),
+				c.classList.add("unlock"), play(),
+				sessionStorage.setItem("close", true);
+		}
+	
+	} else {
+		if (sessionStorage.getItem("close") === "false") {
+			let closer = document.getElementById("cplayer").querySelector(".closer");
+			closer.classList.remove("unlock");
+			closer.classList.add("locked");
+		}
+	}
 }
 
 function userPcAgent() {
@@ -27,7 +51,7 @@ function creatSheet() {
 }
 
 function creatdiv() {
-	var app = '<div class="playdiv"><span class="unlock" onclick="closer(this);"></span><div id="app"></div></div>';
+	var app = '<div class="playdiv"><span class="closer unlock" onclick="closer(this);"></span><div id="app"></div></div>';
 	document.getElementById('cplayer').innerHTML = app;
 }
 
@@ -100,12 +124,14 @@ function musicInfo(arg) {
 };
 
 
-function setItem(e){
+function setItem(e) {
 	sessionStorage.setItem("musics", JSON.stringify(e));
 }
-function clearItem(){
+
+function clearItem() {
 	sessionStorage.removeItem(musics);
 }
+
 function lyrics(id) {
 	let lyric = "";
 	Ajax({
@@ -130,7 +156,7 @@ window.onload = function() {
 		playlist: musicInfo("init").ms,
 		height: userPcAgent() === true ? 10 : 1,
 		width: '',
-		volume :'0.3',
+		volume: '0.3',
 		big: true
 	});
 
@@ -139,13 +165,13 @@ window.onload = function() {
 	var div = player.view.getPlayDiv();
 	window.addEventListener('scroll', (e) => {
 		last_scroll_position = window.scrollY;
-		//console.info("last={}---new={}", parseInt(last_scroll_position), parseInt(new_scroll_position))
+		console.info("last={}---new={}", parseInt(last_scroll_position), parseInt(new_scroll_position))
 		if (new_scroll_position < last_scroll_position && last_scroll_position > 80) {
 			// ↓ scroll
 			div.classList.remove("musicScrollDown");
 			div.classList.add("musicScrollUp");
 			player.view.showInfo();
-		} else if (new_scroll_position > last_scroll_position && last_scroll_position < 80) {
+		} else if ( last_scroll_position < 20) {
 			// ↑ scroll
 			if (sessionStorage.getItem("close") !== "false") {
 				div.classList.remove("musicScrollUp");
@@ -175,10 +201,10 @@ window.onload = function() {
 		}
 	});
 	player.on('error', function() {
-         let old = player.nowplay;
-         player.remove(old);
+		let old = player.nowplay;
+		player.remove(old);
 	});
-	
+
 	var count = 0;
 	var interval = setInterval(function() {
 		player.play();

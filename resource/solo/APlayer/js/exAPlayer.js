@@ -54,9 +54,25 @@ function creatSheet() {
 
 function closer(c) {
 	if (arguments.length > 0) {
-		c.classList.contains("unlock") ? (c.classList.remove("unlock"),
-			c.classList.add("locked"), sessionStorage.setItem("close", false)) : (c.classList.remove("locked"),
-			c.classList.add("unlock"), sessionStorage.setItem("close", true))
+		let play = () => {
+			let p = c.nextSibling;
+			if (p.classList.contains("musicScrollUp")) {
+				p.classList.remove("musicScrollUp");
+				p.classList.add("musicScrollDown");
+			} else {
+				p.classList.remove("musicScrollDown"), p.classList.add("musicScrollUp");
+			}
+		};
+		if (c.classList.contains("unlock")) {
+			c.classList.remove("unlock"),
+				c.classList.add("locked"), play(),
+				sessionStorage.setItem("close", false);
+		} else {
+			c.classList.remove("locked"),
+				c.classList.add("unlock"), play(),
+				sessionStorage.setItem("close", true);
+		}
+
 	} else {
 		if (sessionStorage.getItem("close") === "false") {
 			let closer = document.getElementById("aplayer").querySelector(".closer");
@@ -240,8 +256,7 @@ window.onload = () => {
 			// ↓ scroll
 			div.classList.remove("musicScrollDown");
 			div.classList.add("musicScrollUp");
-			player.view.showInfo();
-		} else if (new_scroll_position > last_scroll_position && last_scroll_position < 80) {
+		} else if (last_scroll_position < 80) {
 			// ↑ scroll
 			if (sessionStorage.getItem("close") !== "false") {
 				div.classList.remove("musicScrollUp");
