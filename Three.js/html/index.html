@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Three.js</title>
+		<style>
+			body { margin: 0; padding: 0;
+			  overflow: hidden;
+			  }
+		 canvas 
+			{ width: 100%; height: 100%; }
+			</style>
+	</head>
+	<body>
+	</body>
+	<script src="../js/three.js">
+	</script>
+	<script type="text/javascript">
+		var WIDTH = window.innerWidth;
+		var HEIGHT = window.innerHeight;
+		var renderer = new THREE.WebGLRenderer({
+			antialias: true
+		});
+		renderer.setSize(WIDTH, HEIGHT);
+		renderer.setClearColor(0xDDDDDD, 1);
+		document.body.appendChild(renderer.domElement);
+	</script>
+</html>
