@@ -1,3 +1,73 @@
-<script type="a/javascript;version=1.7">
-		alert("111");
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>canvas</title>
+		<style type="text/css">
+			body {
+				margin: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas class="myCanvas">
+			<p>添加恰当的反馈信息。</p>
+		</canvas>
+	</body>
+	<script type="text/javascript">
+		function degToRad(degrees) {
+			return degrees * Math.PI / 180;
+		};
+
+		function randomColor() {
+			var r = Math.floor(Math.random() * 256);
+			var g = Math.floor(Math.random() * 256);
+			var b = Math.floor(Math.random() * 256);
+			var op = 0.5 + Math.random() * 0.5;
+			return `rgb(${r},${g},${b},${op})`;
+		}
+
+		function fillArc(ctx, t) {
+			var time;
+			var anticlockwise = function() {
+				if (t.fx) {
+					if (t.r <=5) {
+						t.fx = false;
+					}
+					t.r = t.r -Math.floor(Math.random() * 5);
+					//t.x = t.x - 10;
+				} else {
+					if (t.r >= 150) {
+						t.fx = true;
+					}
+					t.r = t.r + Math.floor(Math.random() * 5)
+					//t.x = t.x + 10;
+				}
+
+			}
+			var arc = function() {
+				ctx.strokeStyle  = randomColor();
+				ctx.beginPath();
+				console.log(t);
+				ctx.arc(t.x, t.y, t.r, degToRad(0), degToRad(360), true);
+				anticlockwise();
+				ctx.stroke();
+			}
+			time = setInterval(arc, 100)
+		}
+		var canvas = document.querySelector('.myCanvas');
+		var width = canvas.width = window.innerWidth;
+		var height = canvas.height = window.innerHeight;
+		//获取2D画板
+		var ctx = canvas.getContext('2d');
+		fillArc(ctx, {
+			x: 160,
+			y: 150,
+			r: 150,
+			fx: true
+		});
+
 	</script>
+</html>
