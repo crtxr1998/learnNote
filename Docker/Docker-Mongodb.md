@@ -51,10 +51,10 @@ $ docker exec -it mongo13520 mongo admin
 
 ![](https://raw.githubusercontent.com/crtxr1998/learnNote/master/Docker/images/Docker-Mongodb/3.png)
 
-**创建用户及密码并授予权限**
+**创建root用户及密码并授予权限**
 
 ```mariadb
-db.createUser({ user:'txr',pwd:'123456',roles:[ { role:'dbOwner', db: 'admin'}]});
+db.createUser({ user:'root',pwd:'123456',roles:[ { role:'root', db: 'admin'}]});
 ```
 
 ![4](https://raw.githubusercontent.com/crtxr1998/learnNote/master/Docker/images/Docker-Mongodb/4.png)
@@ -109,6 +109,12 @@ db.foo.find( { a : 1 } ) #对于当前数据库中的foo集合进行查找，条
 ```
 
 **MongoDB**没有创建数据库的命令，但有类似的命令。 如：如果你想创建一个**dbname**的数据库，先运行**use dbname**命令，之后就做一些操作（如：**db.createCollection(‘name’)）**,这样就可以创建一个名叫**dbname**的数据库。
+
+📌 命令最好一起执行，分开执行可能导致第一条命令失效了
+
+>use txr
+>
+>db.createCollection('txr')
 
 📌要注意的是如果当前操作的user 没有这个**db**的读写权限是会抛出**UnAuthorized**异常的
 
