@@ -1,20 +1,23 @@
 
 
-Docker安装Mongodb
+# <strong style='color:#06A243'>Mongodb介绍</strong>
 
-# Mongodb介绍
+- **MongoDB** 是一个基于分布式文件存储的数据库。由 C++ 语言编写。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。
+- **MongoDB** 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。
+- **MongoDB** 最大的特点就是无 **Schema** 限制，灵活度很高。数据格式是 **BSON**，**BSON** 是一种类似 **JSON** 的二进制形式的存储格式，简称 **Binary JSON** 它和 **JSON** 一样，支持内嵌的文档对象和数组对象。
 
-**MongoDB** 是一个高性能，开源，无模式的文档型数据库，是当前**noSql**数据库产品中最热门的一种。它在许多场景下用于替代传统的关系型数据库或键值对存储方式，MongoDB是用C++开发，
+### 跟关系型数据库概念对比
 
-### **MongoDB特点(没有列举全)**
+| **Mysql**          | **MongoDB**        |
+| :----------------- | :----------------- |
+| Database（数据库） | Database（数据库） |
+| Table（表）        | Collection（集合） |
+| Row（行）          | Document（文档）   |
+| Column（列）       | Field（字段）      |
 
-- *面向集合（Collenction-Orented）*
-  　　*意思是数据被分组存储在数据集中， 被称为一个集合（Collenction)。每个集合在数据库中都有一个唯一的标识名，并且可以包含无限数目的文档* 
--  *📌模式自由（schema-free)*
-  　　*意味着对于存储在 MongoDB 数据库中的文件，我们不需要知道它的任何结构定义。提了这么多次"无模式"或"模式自由"，它到是个什么概念呢？例如，下面两个记录可以存在于同一个集合里面： {"welcome" : "Beijing"} {"age" : 25}* 
 
-- *文档型*
-  　　*意思是我们存储的数据是键-值对的集合,键是字符串,值可以是数据类型集合里的任意类型,包括数组和文档. 我们把这个数据格式称作 “BSON” 即 “Binary Serialized dOcument Notation.”* 
+
+# <strong style='color:#06A243'>与SpringBoot集成</strong>
 
 ### **新建SpringBoot项目=>:** https://start.spring.io/
 
@@ -238,7 +241,7 @@ public class Account {
     }
 ```
 
-**结果如下👇**
+**执行结果如下👇**
 
 ```json
 /* 1 */
@@ -251,6 +254,32 @@ public class Account {
     "_class" : "com.crtxr.mongodbdemo.document.Account"
 }
 ```
+
+#### 📌分页查询用户信息
+
+```java
+   /**
+     * 分页查询用户信息
+     */
+    @Test
+    void findAccountByLimit() {
+        Query query = Query.query(Criteria.where("name").regex("七爷"));
+        query.skip(2);
+        query.limit(2);
+        List<Account> accounts = mongoTemplate.find(query, Account.class);
+        for (Account account : accounts) {
+            System.out.println(String.format("分页结果======>>>>>>>>>>%s", account));
+        }
+    }
+```
+
+>        使用**skip();**、**limit();**两个函数实现分页效果。
+>
+>        **skip();**跳过指定数目文档数
+>
+>        **limit();**返回文档数
+
+
 
 #### 📌修改用户信息用户
 
@@ -292,7 +321,7 @@ public class Account {
 }
 ```
 
-> 初始化的时候是没有<strong style='color:#0D96E8'>loves</strong>属性的，但修改的时候<strong style='color:#0D96E8'>loves</strong>属性不为<strong style='color:#0D96E8'>null</strong>，**mongodb**动态新增了<strong style='color:#0D96E8'>loves</strong>属性，
+> 初始化的时候是没有<strong style='color:#0D96E8'>loves</strong>属性的，但修改的时候<strong style='color:#0D96E8'>loves</strong>属性不为<strong style='color:#0D96E8'>null</strong>，**mongodb**动态新增了<strong style='color:#0D96E8'>loves</strong>属性，这里体现了**mongodb**的无 **Schema** 限制
 
 #### 📌删除用户信息用户
 
@@ -303,7 +332,7 @@ public class Account {
     @Test
     void deleteByWhere() {
         //找到并删除weight大于等于22并且loves为null的第一条
-        //(这里要注意虽然这里实际文档中不存在loves属性,但是{loves:null}的条件是成立的)
+        //(这里要注意如果实际文档中不存在loves属性,但是{loves:null}的条件是成立的,这里最好要注意，很容易误删数据)
         // 删除多条使用findAllAndRemove
         mongoTemplate.findAndRemove(new Query(Criteria.where("weight").gte(22).and("loves").is(null)), Account.class);
           //删除所有的文档
@@ -313,23 +342,11 @@ public class Account {
         mongoTemplate.dropCollection("txr");
     }
 ```
-```
-   /**
-     * 分页查询用户信息
-     */
-    @Test
-    void findAccountByLimit() {
-        Query query = Query.query(Criteria.where("name").regex("七爷"));
-        query.skip(2);
-        query.limit(2);
-        List<Account> accounts = mongoTemplate.find(query, Account.class);
-        for (Account account : accounts) {
-            System.out.println(String.format("分页结果======>>>>>>>>>>%s", account));
-        }
-    }
-```
 
 
 
 
+
+>- [恕我直言，牛逼哄哄的MongoDB你可能只会30%](https://mp.weixin.qq.com/s/2i7K9hq7LCytlzOjCl1bXA)
+>- [使用Docker安装 mongodb](https://mp.weixin.qq.com/s/DtFfDHsRv9n6VGJXDNGy3g)
 
