@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>纯css实现文字循环滚动效果</title>
+		<style type="text/css">
+			.body {
+				margin: auto;
+			}
+
+			.boxflex {
+				display: flex;
+				width: 300px;
+				height: 300px;
+				border: 5px #8A2BE2 solid;
+			}
+
+			.w-100-h-100 {
+				width: 100px;
+				background-color: red;
+			}
+			.flex1 {
+				flex: 1.2;
+				background-color: red;
+			}
+			.flex2 {
+				flex: 1.8;
+				background-color: blueviolet;
+			}
+			.flex3 {
+				flex: 1;
+				background-color: black;
+			}
+			
+			.child{
+				background: inherit;
+				border: 30px ghostwhite solid;
+				width: 80px;
+				height: 80px;
+				
+			}
+			
+		</style>
+	</head>
+	<body>
+          <div class="boxflex">
+          	<div class="w-100-h-100">	
+          	</div>
+			
+		
+			<div class="flex1">
+				<div class="child">
+					
+				</div>
+			</div>
+			<div class="flex2">
+				
+			</div>
+			<div class="flex3">
+				
+			</div>
+          </div>
+	</body>
+</html>
