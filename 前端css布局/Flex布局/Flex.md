@@ -36,9 +36,23 @@ align-content: stretch|center|flex-start|flex-end|space-between|space-around|ini
 
 ![img](https://upload-images.jianshu.io/upload_images/18253298-f356148f9acc05c3?imageMogr2/auto-orient/strip|imageView2/2/w/563/format/webp)
 
-**容器默认存在两根轴：**
+**`容器默认存在两根轴：`**
 
 水平的主轴（**main axis**）和垂直的交叉轴（**cross axis**）。主轴的开始位置（与边框的交叉点）叫做**main start**，结束位置叫做**main end**；交叉轴的开始位置叫做**cross start**，结束位置叫做**cross end**。
 
 项目默认沿`主轴`排列。单个项目占据的主轴空间叫做main size，占据的交叉轴空间叫做**cross size**。
 
+### Flex容器属性
+
+------
+
+**flex-direction：决定项目（item）的排列方向**
+
+flex-direction有四个值：
+
+| 值             | 描述                         |
+| -------------- | ---------------------------- |
+| row（默认值）  | 主轴为水平方向，起点在左端。 |
+| row-reverse    | 主轴为水平方向，起点在右端   |
+| column         | 主轴为垂直方向，起点在上沿   |
+| column-reverse | 主轴为垂直方向，起点在下沿   |
