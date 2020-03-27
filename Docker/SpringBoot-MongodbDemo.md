@@ -8,12 +8,12 @@
 
 ### 跟关系型数据库概念对比
 
-| **Mysql**          | **MongoDB**        |
-| :----------------- | :----------------- |
-| Database（数据库） | Database（数据库） |
-| Table（表）        | Collection（集合） |
-| Row（行）          | Document（文档）   |
-| Column（列）       | Field（字段）      |
+| **Mysql**          | **MongoDB**        | **ElasticSearch** |
+| :----------------- | :----------------- | ----------------- |
+| Database（数据库） | Database（数据库） | index （数据库）  |
+| Table（表）        | Collection（集合） | type（表）        |
+| Row（行）          | Document（文档）   | Document（文档）  |
+| Column（列）       | Field（字段）      | Field（字段）     |
 
 
 
