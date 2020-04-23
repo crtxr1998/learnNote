@@ -5,69 +5,63 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>canvas</title>
 		<style type="text/css">
-			body {
-				margin: 0;
+			.bg-blur::before {
+				content: "";
+				position: absolute;
+				-webkit-filter: blur(3px);
+				-moz-filter: blur(3px);
+				-o-filter: blur(3px);
+				-ms-filter: blur(3px);
+				filter: blur(2px);
+				z-index: -1;
+				background: url('http://www.zi-han.net.img.800cdn.com/theme/hplus/img/a3.jpg') no-repeat;
+				height: 70px;
+				width: 70px;
+				top: 0px;
+				left: 0px;
 				overflow: hidden;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: cover;
+
+			}
+			.bg-blur{
+				height: 60px;
+				width: 60px;
+			}
+
+			.dic {
+				display: inline-block;
+				position: relative;
+				padding: 0px;
+				height: 100px;
+				width: 100px;
+			}
+
+
+			.image {
+				padding-left: 5px;
+				padding-top: 5px;
+				width: 60px;
+				height: 60px;
 			}
 		</style>
 	</head>
 	<body>
-		<canvas class="myCanvas">
-			<p>添加恰当的反馈信息。</p>
-		</canvas>
+
+		<div class="dic">
+			<div class=" bg-blur">
+				<img class="image" src="ab.jpg" />
+			</div>
+		</div>
+		<div class="dic">
+			<div class=" bg-blur">
+				<img class="image" src="ab.jpg" />
+			</div>
+		</div>
+
 	</body>
 	<script type="text/javascript">
-		function degToRad(degrees) {
-			return degrees * Math.PI / 180;
-		};
-
-		function randomColor() {
-			var r = Math.floor(Math.random() * 256);
-			var g = Math.floor(Math.random() * 256);
-			var b = Math.floor(Math.random() * 256);
-			var op = 0.5 + Math.random() * 0.5;
-			return `rgb(${r},${g},${b},${op})`;
-		}
-
-		function fillArc(ctx, t) {
-			var time;
-			var anticlockwise = function() {
-				if (t.fx) {
-					if (t.r <=5) {
-						t.fx = false;
-					}
-					t.r = t.r -Math.floor(Math.random() * 5);
-					//t.x = t.x - 10;
-				} else {
-					if (t.r >= 150) {
-						t.fx = true;
-					}
-					t.r = t.r + Math.floor(Math.random() * 5)
-					//t.x = t.x + 10;
-				}
-
-			}
-			var arc = function() {
-				ctx.strokeStyle  = randomColor();
-				ctx.beginPath();
-				console.log(t);
-				ctx.arc(t.x, t.y, t.r, degToRad(0), degToRad(360), true);
-				anticlockwise();
-				ctx.stroke();
-			}
-			time = setInterval(arc, 100)
-		}
-		var canvas = document.querySelector('.myCanvas');
-		var width = canvas.width = window.innerWidth;
-		var height = canvas.height = window.innerHeight;
-		//获取2D画板
-		var ctx = canvas.getContext('2d');
-		fillArc(ctx, {
-			x: 160,
-			y: 150,
-			r: 150,
-			fx: true
-		});
 
 	</script>
 </html>
