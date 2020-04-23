@@ -6,6 +6,8 @@
 
  　**官网在线演案例**：https://itextpdf.com/en/demos 
 
+　 **官网Java/C#案例**：https://itextpdf.com/en/tags/itext-7-examples  
+
 - **<b style="color:#2783F9">通过Acrobat Reader DC 来设置动态表单</b>**.  **(自行baidu/google下载)**
 
 - **<b style="color:#2783F9">填充表单数据</b>**
